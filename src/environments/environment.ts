@@ -3,6 +3,15 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  firebase: {
+    apiKey: "AIzaSyDPtQSbfYk1_Q3OPseJZgI-UReA7WUib2E",
+    authDomain: "calskancipher.firebaseapp.com",
+    databaseURL: "https://calskancipher-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "calskancipher",
+    storageBucket: "calskancipher.appspot.com",
+    messagingSenderId: "656554572269",
+    appId: "1:656554572269:web:186d3e226dcf50c78d8fe4"
+  },
   production: false
 };
 
