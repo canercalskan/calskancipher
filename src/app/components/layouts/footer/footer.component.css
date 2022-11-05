@@ -1,0 +1,15 @@
+p {
+    width: 100%;
+    position: fixed;
+    color: white;
+    bottom: 0;
+    background-color: #212529;
+    padding: 3px;
+    margin-bottom: 0;
+    word-spacing: 3px;
+}
+
+p a {
+    color: green;
+    text-decoration: underline;
+}

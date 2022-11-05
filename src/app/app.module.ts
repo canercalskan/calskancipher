@@ -12,6 +12,7 @@ import { NavbarComponent } from './components/layouts/navbar/navbar.component';
 import { CipherService } from './services/cipher';
 import { FormsModule } from '@angular/forms';
 import { NotFound } from './components/pages/not-found/not-found.component';
+
 @NgModule({
   declarations: [
     AppComponent,
