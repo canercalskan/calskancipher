@@ -1,0 +1,9 @@
+<form #cipherForm = 'ngForm' action="" (submit) = 'handleCipherForm(cipherForm.value) ; cipherForm.reset()' ngNativeValidate>
+    <textarea name="inp" id="inp" cols="30" rows="10" ngModel required></textarea>
+    <button type="submit" class="btn btn-success"></button>
+</form>
+
+<form #deCipherForm = 'ngForm' action="" (submit) = 'handleDeCipherForm(deCipherForm.value)' ngNativeValidate>
+    <textarea name="inp" id="inp" cols="30" rows="10" ngModel required></textarea>
+    <button type="submit" class="btn btn-success"></button>
+</form>
