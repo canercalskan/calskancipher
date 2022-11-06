@@ -1,4 +1,8 @@
-ul li a{
-    padding-right: 1rem;
-    color: rgb(221, 221, 221);
+ul li a {
+    margin-right: 1rem;
+    /* color: rgb(221, 221, 221); */
+}
+
+.activex {
+    color: rgb(0, 238, 24);
 }

@@ -10,9 +10,25 @@
 </form>
   -->
   <div class="wrapper">
-    <h4 class="text-white text-center pt-4">ENCRYPTION / DECRYPTION</h4>
-    <p class="text-center text-white">CALSKANCIPHER is a web application that allows you to perform encryption operations with various algorithms used in the field of cryptography.</p>
+    <h4 class="text-white text-center pt-4">
+      <i class="bi bi-lock fs-1 text-success" id="lock"></i>
+    </h4>
+    <p class="text-center text-white line-1 anim-typewriter mt-5">
+      CALSKANCIPHER is a web application that allows you to perform encryption operations with various 
+      algorithms <br> used in the field of cryptography.
+    </p>
+
+    <div class="center">
+        <form #cipherForm = 'ngForm' action="" (submit) = 'handleCipherForm(cipherForm.value) ; cipherForm.reset()' ngNativeValidate>
+          <textarea name="inp" id="inp" cols="30" rows="10" ngModel required></textarea>
+          <button type="submit">
+            <i class="bi bi-key fs-1" id="key-encrypt"></i>
+          </button>
+      </form>
+      <!-- <i class="bi bi-key fs-1 m-5" id="key-decrypt"></i> -->
+      <form #deCipherForm = 'ngForm' action="" (submit) = 'handleDeCipherForm(deCipherForm.value)' ngNativeValidate>
+        <textarea name="inp" id="inp" cols="30" rows="10" ngModel disabled></textarea>
+      </form>
+    </div>
   </div>
-
-
 <footer></footer>

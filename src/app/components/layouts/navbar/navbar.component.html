@@ -5,17 +5,20 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Polybius Cipher </a>
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{activex: homeActive}" href="#" (click) = 'homeActivex()'>Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">XOR Cipher</a>
+          <a class="nav-link" [ngClass]="{activex: polybiusActive}" href="#" (click) = 'polybiusActivex()'>Polybius Cipher </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{activex: xorActive}" href="#" (click) = 'xorActivex()'>XOR Cipher</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Pricing</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="#">About</a>
+          <a class="nav-link " [ngClass]="{activex: aboutActive}" href="#" (click) = 'aboutActivex()'>About</a>
         </li>
       </ul>
     </div>
