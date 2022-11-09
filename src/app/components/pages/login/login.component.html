@@ -1,0 +1,17 @@
+<navbar></navbar>
+
+<div class="wrapper">
+    
+    <form #loginForm = 'ngForm' (submit) = 'handleLoginSubmission(loginForm.value)' ngNativeValidate>
+        <h3 class="text-center text-white fs-1" style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; margin-top:-2rem ;">LOGIN</h3>
+        <label for="email" class="text-white">E-Mail</label>
+        <input type="email" name="email" id="email" ngModel required>
+        <label for="password" class="text-white mt-3">Password</label>
+        <input type="password" name="password" id="password" ngModel required>
+        <p *ngIf="loginError" class="text-danger">Invalid e-mail or password</p>
+        <button type="submit" class="btn btn-success me-2">Login</button>
+        <button class="btn btn-info text-white" (click) = 'handleGoogleLogin()'>Login with <i class="bi bi-google"></i></button>
+        <a href="#" style="padding-left: 10px; margin-top: 20px;">Register</a>
+    </form>
+
+</div>

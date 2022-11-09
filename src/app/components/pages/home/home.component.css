@@ -2,10 +2,55 @@
     width: 100vw;
     min-height: 100vh;
     max-height: 100%;
-    background-color: #212529;
+}
+
+.wrapper::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(../../../../assets/crowd.jpeg);
+    background-position:center;
+    background-size: cover;
+    background-position-y: top;
+    /* filter:blur(1px); */
+    border: none;
+    z-index: -1;
+}
+
+
+h3 {
+    color: #ffff;
+    font-weight: 2000px;
+    font-size:60px;
+    letter-spacing: 4px;
+    padding-top: 4rem;
+}
+
+
+h3 span {
+    color: rgb(236, 102, 0);
 }
 
 button {
+    display: block;
+    width: 100px;
+    height: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: transparent;
+    border: .9px solid #EC6601;
+    border-radius: 20px;
+    transition: all .4s;
+}
+
+button:hover {
+    color: white;
+    background-color: #EC6601;
+}
+/* button {
     background-color: #212529;
     border: none;
     padding: 0;
@@ -29,7 +74,7 @@ textarea:focus {
 }
 
 .line-1{
-    /* top: 50%;   */
+     top: 50%;   
     width: 300px;
     margin: 0 auto;
     border-right: 2px solid rgba(255,255,255,.75);
@@ -44,9 +89,9 @@ textarea:focus {
              blinkTextCursor 900ms steps(44) infinite normal;
 }
 
-/* .wrapper h4 #key {
+ .wrapper h4 #key {
     animation: glow 1s infinite normal;
-} */
+} 
 
 .center #key-encrypt , .center #key-decrypt {
     animation: glow 1s infinite normal;
@@ -56,6 +101,31 @@ textarea:focus {
     display: flex;
     justify-content: center;
 }
+
+.active-users {
+    padding-top: 1rem;
+    width: 300px;
+    height: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 2px 2px 0 rgba(180, 180, 180, 0.317), 0 3px 1px -2px rgba(180, 180, 180, 0.14), 0 1px 5px 0 rgba(180, 180, 180, 0.14);
+}
+
+.active-users h3 {
+    text-align: center;
+    color: white;
+}
+
+.active-users ul li {
+    text-align: center;
+}
+
+
+.active-users ul li a {
+    text-decoration: none;
+    color: white;
+}
+
 
 @keyframes typewriter{
   from{width: 0;}
@@ -71,4 +141,5 @@ textarea:focus {
     to {
         color: transparent;
     }
-}
+} */
+

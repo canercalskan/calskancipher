@@ -20,7 +20,7 @@ export class CipherService {
 
     polybiusCipher(message : string) : string[] {
         //input message'ı objeye veya modele çek, whitespaces arrayini attribute olarak tanımla, decipher ederken
-        //whitespace eklemenin bi yolunu bul. TADAAAAA
+        //whitespace eklemenin bi yolunu bul. 
         let i , j , k;
         let encrypted : string[] = [];
         let whiteSpaces : number[] = []

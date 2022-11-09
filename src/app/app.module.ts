@@ -12,7 +12,9 @@ import { NavbarComponent } from './components/layouts/navbar/navbar.component';
 import { CipherService } from './services/cipher';
 import { FormsModule } from '@angular/forms';
 import { NotFound } from './components/pages/not-found/not-found.component';
-
+import { LoginComponent } from './components/pages/login/login.component';
+import { ChatComponent } from './components/pages/chat/chat.component';
+import { AuthGuard } from './services/guards/auth';
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,7 +22,9 @@ import { NotFound } from './components/pages/not-found/not-found.component';
     AboutComponent,
     FooterComponent,
     NavbarComponent,
-    NotFound
+    NotFound ,
+    LoginComponent ,
+    ChatComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +33,8 @@ import { NotFound } from './components/pages/not-found/not-found.component';
     AngularFireModule.initializeApp(environment.firebase),
     FormsModule,
     NgbModule,  
-    CipherService
+    CipherService ,
+    AuthGuard
   ],
   providers: [],
   bootstrap: [AppComponent]

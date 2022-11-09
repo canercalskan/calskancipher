@@ -25,9 +25,6 @@ export class NavbarComponent {
         this.xorActive = false;
         this.aboutActive = false;
         this.homeActive = false;
-        // sessionStorage.setItem('polybiusActive' , '1');
-        // sessionStorage.setItem('xorActive' , '0');
-        // sessionStorage.setItem('aboutActive' , '0');
     }
     xorActivex() : void {
         this.xorActive = true;
