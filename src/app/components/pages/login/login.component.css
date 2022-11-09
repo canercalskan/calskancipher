@@ -30,3 +30,7 @@ form a {
     top: 5px;
     text-decoration: none;
 }
+
+form a:hover {
+    cursor: pointer;
+}

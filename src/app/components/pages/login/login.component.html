@@ -2,7 +2,7 @@
 
 <div class="wrapper">
     
-    <form #loginForm = 'ngForm' (submit) = 'handleLoginSubmission(loginForm.value)' ngNativeValidate>
+    <form #loginForm = 'ngForm' *ngIf="!registerForm" (submit) = 'handleLoginSubmission(loginForm.value)' ngNativeValidate>
         <h3 class="text-center text-white fs-1" style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; margin-top:-2rem ;">LOGIN</h3>
         <label for="email" class="text-white">E-Mail</label>
         <input type="email" name="email" id="email" ngModel required>
@@ -11,7 +11,20 @@
         <p *ngIf="loginError" class="text-danger">Invalid e-mail or password</p>
         <button type="submit" class="btn btn-success me-2">Login</button>
         <button class="btn btn-info text-white" (click) = 'handleGoogleLogin()'>Login with <i class="bi bi-google"></i></button>
-        <a href="#" style="padding-left: 10px; margin-top: 20px;">Register</a>
+        <a style="padding-left: 10px; margin-top: 20px;" class="text-warning" (click) = 'registerClicked()'>Register</a>
     </form>
 
+    <form *ngIf="registerForm" #registerForm = 'ngForm'  (submit) = 'handleRegisterSubmission(registerForm.value); registerForm.reset' style="padding-top : 7rem; padding-bottom : 7rem; padding-left: 11.5rem; padding-right : 11.5rem;" ngNativeValidate>
+        <h3 class="text-center text-white fs-1" style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; margin-top:-2rem ;">REGISTER</h3>
+        <label for="username" class="text-white">Username</label>
+        <input type="text" name="username" id="username" ngModel required>
+        <label for="email" class="text-white mt-3">E-Mail</label>
+        <input type="email" name="email" id="email" class="ps-5 pe-5" ngModel required>
+        <label for="password" class="text-white mt-3">Password</label>
+        <input type="password" name="password" id="password" ngModel required>
+        <label for="confirmPassword" class="text-white mt-3">Confirm Password</label>
+        <input type="password" name="confirmPassword" id="confirmPassword" ngModel>
+        <p *ngIf="passwordConflict" class="text-danger">Passwords didn't match</p>
+        <button type="submit" class="btn btn-success me-2">Register</button>
+    </form>
 </div>
