@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 
 export class AuthGuard implements CanActivate {
   constructor(private fireAuth : AngularFireAuth , private router : Router) {}
-  signedIn : boolean = true
+  signedIn! : boolean;
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) : boolean {
     
     this.fireAuth.user.subscribe(r => {

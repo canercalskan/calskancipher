@@ -19,11 +19,11 @@
         <label for="username" class="text-white">Username</label>
         <input type="text" name="username" id="username" ngModel required>
         <label for="email" class="text-white mt-3">E-Mail</label>
-        <input type="email" name="email" id="email" class="ps-5 pe-5" ngModel required>
-        <label for="password" class="text-white mt-3">Password</label>
-        <input type="password" name="password" id="password" ngModel required>
+        <input type="email" name="email" id="email" ngModel required>
+        <label for="password-register" class="text-white mt-3" >Password</label>
+        <input type="password" name="password" id="password-register" (keyup) = 'getPassword($event)' ngModel required>
         <label for="confirmPassword" class="text-white mt-3">Confirm Password</label>
-        <input type="password" name="confirmPassword" id="confirmPassword" ngModel>
+        <input type="password" name="confirmPassword" id="confirmPassword"  (keyup)='checkPasswordConfirm($event)' ngModel>
         <p *ngIf="passwordConflict" class="text-danger">Passwords didn't match</p>
         <button type="submit" class="btn btn-success me-2">Register</button>
     </form>

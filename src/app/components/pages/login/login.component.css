@@ -16,8 +16,18 @@ form {
 }
 
 input {
+    background-color: #212529;
+    border: none;
+    color: #ffff;
+    outline: none;
+    border-bottom: 1px solid grey;
     display: block;
     width: 100%;
+    min-width: 300px;
+}
+
+input:focus {
+    border-bottom: 1px solid #ffff;
 }
 
 button {

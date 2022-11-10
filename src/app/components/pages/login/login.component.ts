@@ -14,6 +14,7 @@ import { SwalComponent } from "@sweetalert2/ngx-sweetalert2";
 })
 
 export class LoginComponent {
+    password! :string;
     loginError! : boolean;
     registerForm : boolean = false;
     passwordConflict! : boolean;
@@ -28,9 +29,49 @@ export class LoginComponent {
             this.loginError = true;
         })
     }
-    handleRegisterSubmission(user : UserModel) : void {
-        //onkeyup event ile passwordu real time check et
-        if(user.password !== user.confirmPassword) {
+
+    getPassword(event : any) : void {
+        this.password = event.target.value;
+        let confirmPassword = document.getElementById('confirmPassword')
+        let password = document.getElementById('password-register');
+        if(this.password === '') {
+            confirmPassword!.style.borderBottom = '1px solid #ffff';
+            password!.style.borderBottom = '1px solid #ffff';
+        }
+        else {
+            if(event.target.value !== confirmPassword!.textContent) {
+                confirmPassword!.style.borderBottom = '1px solid red';
+                password!.style.borderBottom = '1px solid red';
+            }
+            else {
+                confirmPassword!.style.borderBottom = '1px solid #167247';
+                password!.style.borderBottom = '1px solid #167247';
+            }
+        }
+    }
+
+    checkPasswordConfirm(event : any) : void {
+        let password = document.getElementById('password-register');
+        let confirmPassword = document.getElementById('confirmPassword');
+        if(event.target.value === '') {
+            password!.style.borderBottom = '1px solid #ffff';
+            confirmPassword!.style.borderBottom = '1px solid #ffff';
+        }
+        else {
+            if(event.target.value !== this.password) {
+                password!.style.borderBottom = '1px solid red'
+                confirmPassword!.style.borderBottom = '1px solid red'
+            }
+            else {
+                password!.style.borderBottom = '1px solid #167247'
+                confirmPassword!.style.borderBottom = '1px solid #167247'
+            }
+        }
+
+    }
+
+    handleRegisterSubmission(user : UserModel) : void { 
+        if(user.confirmPassword !== user.password) {
             this.passwordConflict = true;
             return;
         }
