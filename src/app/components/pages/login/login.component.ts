@@ -29,11 +29,13 @@ export class LoginComponent {
         })
     }
     handleRegisterSubmission(user : UserModel) : void {
+        //onkeyup event ile passwordu real time check et
         if(user.password !== user.confirmPassword) {
             this.passwordConflict = true;
             return;
         }
         this.fireAuth.createUserWithEmailAndPassword(user.email , user.password).then(() => {
+            this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
             Swal.fire('Success' , 'You have successfully registered, enjoy chatting!' , 'success').then(() => {
                 this.router.navigate(['Chat'])
             });
@@ -45,8 +47,8 @@ export class LoginComponent {
     handleGoogleLogin(){
         let googleProvider = new firebase.auth.GoogleAuthProvider();
         this.fireAuth.signInWithPopup(googleProvider).then((r) => {
+            this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
             Swal.fire('Success' , 'Enjoy chatting !' , 'success').then( () => {
-                sessionStorage.setItem('activeUser' , JSON.stringify(r.user));
             }).then(() => {
                 this.router.navigate(['Chat']);
             });
