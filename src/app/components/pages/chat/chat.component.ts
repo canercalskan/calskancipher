@@ -9,9 +9,5 @@ import { AngularFireAuth } from "@angular/fire/compat/auth";
 })
 
 export class ChatComponent {
-    constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth) {
-        this.fireAuth.user.subscribe(u => {
-            console.log(u);
-        })
-    }
+    constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth) {}
 }

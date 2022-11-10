@@ -34,8 +34,8 @@ export class LoginComponent {
             this.passwordConflict = true;
             return;
         }
+        this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
         this.fireAuth.createUserWithEmailAndPassword(user.email , user.password).then(() => {
-            this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
             Swal.fire('Success' , 'You have successfully registered, enjoy chatting!' , 'success').then(() => {
                 this.router.navigate(['Chat'])
             });
@@ -46,8 +46,8 @@ export class LoginComponent {
     }
     handleGoogleLogin(){
         let googleProvider = new firebase.auth.GoogleAuthProvider();
+        this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
         this.fireAuth.signInWithPopup(googleProvider).then((r) => {
-            this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
             Swal.fire('Success' , 'Enjoy chatting !' , 'success').then( () => {
             }).then(() => {
                 this.router.navigate(['Chat']);
