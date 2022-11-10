@@ -30,9 +30,13 @@ export class LoginComponent {
         })
     }
 
+    backToLogin() : void {
+        this.registerForm = false;
+    }
+
     getPassword(event : any) : void {
         this.password = event.target.value;
-        let confirmPassword = document.getElementById('confirmPassword')
+        let confirmPassword = document.getElementById('confirmPassword');
         let password = document.getElementById('password-register');
         if(this.password === '') {
             confirmPassword!.style.borderBottom = '1px solid #ffff';
@@ -85,6 +89,7 @@ export class LoginComponent {
             console.log(err.code);
         })
     }
+    
     handleGoogleLogin(){
         let googleProvider = new firebase.auth.GoogleAuthProvider();
         this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION)

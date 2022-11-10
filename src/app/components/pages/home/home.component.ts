@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { AngularFireDatabase } from '@angular/fire/compat/database'
 import { CipherService } from "src/app/services/cipher";
-
+import { Router } from "@angular/router";
 @Component({
     selector : 'home',
     templateUrl : './home.component.html',
@@ -9,7 +9,7 @@ import { CipherService } from "src/app/services/cipher";
 })
 
 export class HomeComponent {
-    constructor(private CipherService : CipherService){
+    constructor(private CipherService : CipherService , private router : Router){
     }
     handleCipherForm(message : any) : void {
         let displayResult : string = '';
@@ -23,5 +23,8 @@ export class HomeComponent {
         let displayResult : string = '';
         let s : string = '';
         this.CipherService.polybiusDeCipher(message.inp)
+    }
+    getStarted() : void {
+        this.router.navigate(['Login'])
     }
 }

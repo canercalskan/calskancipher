@@ -2,6 +2,7 @@
     width: 100vw;
     min-height: 100vh;
     max-height: 100%;
+    font-family: 'Oxygen', sans-serif;
 }
 
 .wrapper::before {
@@ -11,7 +12,7 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-image: url(../../../../assets/crowd.jpeg);
+    background-image: url(../../../../assets/globe.png);
     background-position:center;
     background-size: cover;
     background-position-y: top;
@@ -38,18 +39,21 @@ button {
     display: block;
     width: 100px;
     height: 50px;
-    margin-left: auto;
-    margin-right: auto;
+    /* margin-left: auto;
+    margin-right: auto; */
     background-color: transparent;
     border: .9px solid #EC6601;
     border-radius: 20px;
     transition: all .4s;
+    margin-left: 5rem;
 }
 
 button:hover {
     color: white;
     background-color: #EC6601;
 }
+
+
 /* button {
     background-color: #212529;
     border: none;

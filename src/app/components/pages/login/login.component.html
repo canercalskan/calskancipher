@@ -26,5 +26,8 @@
         <input type="password" name="confirmPassword" id="confirmPassword"  (keyup)='checkPasswordConfirm($event)' ngModel>
         <p *ngIf="passwordConflict" class="text-danger">Passwords didn't match</p>
         <button type="submit" class="btn btn-success me-2">Register</button>
+        <span style="color: rgb(59, 59, 243); position: relative; top: 20px;" class="float-end" (click) = 'backToLogin()'>
+            back to login
+        </span>
     </form>
 </div>
