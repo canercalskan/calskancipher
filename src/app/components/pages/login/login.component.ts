@@ -25,7 +25,16 @@ export class LoginComponent {
     }
 
     handleLoginSubmission(user : UserModel){
-        this.fireAuth.signInWithEmailAndPassword(user.email , user.password).catch(() => {
+        this.fireAuth.signInWithEmailAndPassword(user.email , user.password).then((activatedUser) => {
+            this.db.list<UserModel>('users').valueChanges().subscribe(r => {
+                r.forEach(u => {
+                    if(u.uid === activatedUser.user?.uid) {
+                        u.active = true;
+                        this.db.list('users').update(u.key , u);
+                    }
+                })
+            })
+        }).catch(() => {
             this.loginError = true;
         })
     }
@@ -79,27 +88,48 @@ export class LoginComponent {
             this.passwordConflict = true;
             return;
         }
-        this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
-        this.fireAuth.createUserWithEmailAndPassword(user.email , user.password).then(() => {
-            Swal.fire('Success' , 'You have successfully registered, enjoy chatting!' , 'success').then(() => {
-                this.router.navigate(['Chat'])
-            });
-        }).catch(err => {
-            Swal.fire('Error' , 'Something went horribly wrong..' , 'error');
-            console.log(err.code);
-        })
+        else {
+            let newUser = new UserModel();
+            newUser.email = user.email;
+            newUser.username = user.username;
+            this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+            this.fireAuth.createUserWithEmailAndPassword(user.email , user.password).then((r) => {
+                    newUser.uid = r.user!.uid!;
+                    this.fireAuth.user.subscribe(u => {
+                        u?.updateProfile({
+                            displayName : newUser.username
+                        })
+                    })
+                }).then(() => {
+                    newUser.active = true;
+                    this.db.list('users').push(newUser).then((r) => {
+                        newUser.key = r.key!;
+                        this.db.list('users').update(r.key! , newUser);
+                        Swal.fire('Success' , 'You have successfully registered, enjoy chatting!' , 'success').then(() => {
+                            this.router.navigate(['Chat'])
+                        });
+                    }).catch(err => {
+                        Swal.fire('Error' , 'Something went horribly wrong..' , 'error');
+                        console.log(err.code)
+                    })
+                })  
+            }   
     }
     
-    handleGoogleLogin(){
+    handleGoogleLogin() : void {
         let googleProvider = new firebase.auth.GoogleAuthProvider();
         this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
         this.fireAuth.signInWithPopup(googleProvider).then((r) => {
-            Swal.fire('Success' , 'Enjoy chatting !' , 'success').then( () => {
+            r.user?.updateProfile( {
+                displayName : r.user.email
             }).then(() => {
-                this.router.navigate(['Chat']);
-            });
-        }).catch(() => {
-            Swal.fire('Error' , 'Something went horribly wrong...' , 'error');
+                Swal.fire('Success' , 'Enjoy chatting !' , 'success').then( () => {
+                }).then(() => {
+                    this.router.navigate(['Chat']);
+                });
+            }).catch(() => {
+                Swal.fire('Error' , 'Something went horribly wrong...' , 'error');
+            })
         })
     }
 }
