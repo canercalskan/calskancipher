@@ -120,6 +120,25 @@ export class LoginComponent {
         let googleProvider = new firebase.auth.GoogleAuthProvider();
         this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
         this.fireAuth.signInWithPopup(googleProvider).then((r) => {
+            let registered = false;
+            this.db.list<UserModel>('users').valueChanges().subscribe(userlist => {
+                userlist.forEach(user => {
+                    if(r.user?.uid === user.uid) {
+                        registered = true;
+                    }
+                })
+            })
+            if(!registered) {
+                let newUser = new UserModel();
+                newUser.active = true;
+                newUser.username = r.user?.displayName!;
+                newUser.email = r.user?.email!;
+                newUser.uid = r.user?.uid!;
+                this.db.list('users').push(newUser).then(result => {
+                    newUser.key = result.key!;
+                    this.db.list('users').update(newUser.key , newUser);
+                })
+            }
             r.user?.updateProfile( {
                 displayName : r.user.email
             }).then(() => {
