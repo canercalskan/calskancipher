@@ -117,38 +117,42 @@ export class LoginComponent {
     }
     
     handleGoogleLogin() : void {
+        let userFound : boolean;
+        let registered : boolean;
+        let newUser = new UserModel();
         let googleProvider = new firebase.auth.GoogleAuthProvider();
         this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
         this.fireAuth.signInWithPopup(googleProvider).then((r) => {
-            let registered = false;
+            newUser.active = true;
+            newUser.username = r.user?.displayName!;
+            newUser.email = r.user?.email!;
+            newUser.uid = r.user?.uid!;
             this.db.list<UserModel>('users').valueChanges().subscribe(userlist => {
-                userlist.forEach(user => {
-                    if(r.user?.uid === user.uid) {
+                for(let i = 0; i< userlist.length; i++) {
+                    if(userlist[i].uid === r.user?.uid) {
                         registered = true;
+                        userlist[i].active = true;
+                        this.db.list('users').update(userlist[i].key , userlist[i])
+                        break;
                     }
-                })
+                    else {
+                        registered = false;
+                    }
+                }
+                if(registered === false) {
+                    this.db.list('users').push(newUser).then(result => {
+                        newUser.key = result.key!;
+                        this.db.list('users').update(newUser.key , newUser);
+                    })
+                }
+                    Swal.fire('Success' , 'Enjoy chatting !' , 'success').then( () => {
+                    }).then(() => {
+                        this.router.navigate(['Chat']);
+                    });
             })
-            if(!registered) {
-                let newUser = new UserModel();
-                newUser.active = true;
-                newUser.username = r.user?.displayName!;
-                newUser.email = r.user?.email!;
-                newUser.uid = r.user?.uid!;
-                this.db.list('users').push(newUser).then(result => {
-                    newUser.key = result.key!;
-                    this.db.list('users').update(newUser.key , newUser);
-                })
-            }
-            r.user?.updateProfile( {
-                displayName : r.user.email
-            }).then(() => {
-                Swal.fire('Success' , 'Enjoy chatting !' , 'success').then( () => {
-                }).then(() => {
-                    this.router.navigate(['Chat']);
-                });
-            }).catch(() => {
-                Swal.fire('Error' , 'Something went horribly wrong...' , 'error');
-            })
+
+        }).catch(() => {
+            Swal.fire('Error' , 'Something went horribly wrong...' , 'error');
         })
     }
 }
