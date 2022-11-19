@@ -16,6 +16,8 @@ import { LoginComponent } from './components/pages/login/login.component';
 import { ChatComponent } from './components/pages/chat/chat.component';
 import { AuthGuard } from './services/guards/auth';
 import { LoginsGuard } from './services/guards/login';
+import { ChatNavbar } from './components/layouts/chat-navbar/chat-navbar.component';
+import { UserService } from './services/user';
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,7 +27,7 @@ import { LoginsGuard } from './services/guards/login';
     NavbarComponent,
     NotFound ,
     LoginComponent ,
-    ChatComponent
+    ChatComponent, ChatNavbar
   ],
   imports: [
     BrowserModule,
@@ -36,7 +38,8 @@ import { LoginsGuard } from './services/guards/login';
     NgbModule,  
     CipherService ,
     AuthGuard ,
-    LoginsGuard
+    LoginsGuard ,
+    UserService
   ],
   providers: [],
   bootstrap: [AppComponent]
