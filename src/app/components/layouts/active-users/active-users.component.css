@@ -1,0 +1,41 @@
+ul {
+    padding: 0;
+    background: #202C33;
+    color: #ffff;
+    height:80vh;
+    max-height: 100vh;
+    border: none;
+    margin-top: 3rem;
+    overflow: scroll;
+    /* overflow-y: scroll; */
+    overflow-x: hidden;
+    list-style-type: none;
+    box-sizing: content-box;
+}
+
+ul::-webkit-scrollbar {
+    display: none;
+}
+
+ul li {
+    text-align: left;
+    padding: 1rem;
+    width:auto;
+}
+
+ul li p:hover {
+    cursor:default;
+}
+
+#chat:hover {
+    cursor: pointer;
+}
+
+ul li:hover {
+    background-color: #2A3942;
+}
+
+hr {
+    width: 100%;
+    opacity: .1;
+}

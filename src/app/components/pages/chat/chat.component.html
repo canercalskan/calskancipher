@@ -1,5 +1,23 @@
-<chat-navbar></chat-navbar>
-<active-users></active-users>
-<div class="container">
+<div class="wrapper">
+    <div class="container">
+        <chat-navbar></chat-navbar>
+        <div class="content">
+            <div class="active-users-sidebar">
+                <active-users></active-users>
+            </div>
+            <div class="" id="chat-session">
+                <div class="session-navbar text-white">
+                    <span><i class="bi bi-person fs-4" style="border:1px solid grey; border-radius: 15rem; padding: .5rem;"></i></span>
+                    <span class="ms-3">Caner</span>
+                    <i class="bi bi-three-dots float-end text-white fs-5" id="session-actions"></i>
+                </div>
 
+                <div id="text-input">
+                    <input type="text" name="message" id="message"> 
+                    <i class="bi bi-send d-inline"></i>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>

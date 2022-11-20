@@ -1,8 +1,17 @@
 <ul>
-    <li>
+    <h4 class="text-center">Users</h4>
+    <li style="opacity: .6;" class="text-center">
         {{currentUser.username}} <span>(You)</span>
     </li>
-    <li *ngFor="let user of activeUserList">
-        <p *ngIf="user.active === true">{{user.username}} <i class="bi bi-chat-dots d-inline"></i></p>
-    </li>
+    <hr>
+    <div *ngFor="let user of activeUserList">
+        <li>
+            <p *ngIf="user.active === true">{{user.username}}
+                <span class="float-end">
+                    <i class="bi bi-circle-fill text-success fs-6"></i>  <i id="chat" class="bi bi-chat-dots d-inline text-info ms-1 me-2"></i>
+                </span>
+            </p>
+        </li>
+        <hr>
+    </div>
 </ul>
