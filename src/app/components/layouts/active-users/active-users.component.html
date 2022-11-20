@@ -1,0 +1,8 @@
+<ul>
+    <li>
+        {{currentUser.username}} <span>(You)</span>
+    </li>
+    <li *ngFor="let user of activeUserList">
+        <p *ngIf="user.active === true">{{user.username}} <i class="bi bi-chat-dots d-inline"></i></p>
+    </li>
+</ul>

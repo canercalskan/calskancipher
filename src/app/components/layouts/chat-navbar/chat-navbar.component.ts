@@ -17,6 +17,7 @@ export class ChatNavbar {
                 for(let i = 0; i < response.length; i++ ){
                     if(response[i].uid === currentUser?.uid) {
                         this.user = response[i];
+                        break;
                     }
                 }
             })

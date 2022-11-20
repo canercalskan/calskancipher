@@ -18,6 +18,7 @@ import { AuthGuard } from './services/guards/auth';
 import { LoginsGuard } from './services/guards/login';
 import { ChatNavbar } from './components/layouts/chat-navbar/chat-navbar.component';
 import { UserService } from './services/user';
+import { ActiveUsers } from './components/layouts/active-users/active-users.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,7 +28,8 @@ import { UserService } from './services/user';
     NavbarComponent,
     NotFound ,
     LoginComponent ,
-    ChatComponent, ChatNavbar
+    ChatComponent, ChatNavbar,
+    ActiveUsers
   ],
   imports: [
     BrowserModule,
