@@ -1,13 +1,9 @@
 .wrapper {
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
+    max-height: 100%;
     background-color: #111B21;
 }
-
-/* .row {
-    width: 100%;
-    margin: 0;
-} */
 
 .content {
     width: 100%;
@@ -79,4 +75,37 @@
 #text-input i:hover {
     cursor: pointer;
     color: rgb(3, 157, 3);
+}
+
+
+.first-user {
+    margin-top: 1rem;
+    background-color: #035C4B;
+    padding: .5rem 1rem;
+    border-radius: 6px;
+    text-align: right;
+    width: max-content;
+    margin-left: 52rem;
+}
+
+
+.end-user {
+    width: max-content;
+    display: block;
+    background-color: rgb(59, 59, 59);
+    padding: .5rem 1rem;
+    left: 13px;
+    border-radius: 8px;
+}
+
+.message-time {
+    font-size: 12px;
+    position: relative;
+    right: -10px;
+    bottom: -10px;
+    opacity: .5;
+}
+
+.chat-field {
+    list-style: none;
 }

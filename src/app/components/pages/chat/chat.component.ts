@@ -10,6 +10,6 @@ import { UserModel } from "src/app/models/user";
 })
 
 export class ChatComponent {
-    userName! : string
+    userName! : string;
     constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth) {}
 }
