@@ -9,18 +9,5 @@ export class UserModel {
     uid! : string;
     active! : boolean;
     key! : string;
-    // sessions : SessionModel[] = [
-    //     {
-    //         sessionID : '' , 
-    //         firstUser : {email : '' , active : false , key : '', uid : '' , username : '' , sessions : [] , confirmPassword : '' , password : ''} , 
-    //         endUser : {email : '' , active : false , key : '', uid : '' , username : '' , sessions : [] , confirmPassword : '' , password : ''}, 
-    //         conversation : [
-    //             {
-    //                 content: '' , 
-    //                 sender : {email : '' , active : false , key : '', uid : '' , username : '' , sessions : [] , confirmPassword : '' , password : ''}
-    //             }
-    //         ]
-    //     }
-    // ];
     sessions : string[] = ['']  
 }

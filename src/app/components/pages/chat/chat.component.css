@@ -48,6 +48,13 @@
     bottom: 0;
 }
 
+#text-input button {
+    background-color: #202C33;
+    border: none;
+    width: min-content;
+    height: min-content;
+}
+
 #text-input input {
     width: 90%;
     margin: 1rem;

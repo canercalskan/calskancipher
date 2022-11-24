@@ -3,11 +3,14 @@ import { AngularFireAuth } from "@angular/fire/compat/auth";
 import { AngularFireDatabase } from "@angular/fire/compat/database";
 import { UserModel } from "../models/user";
 import { SwalComponent } from "@sweetalert2/ngx-sweetalert2";
+import { SessionModel } from "../models/session";
 import Swal from "sweetalert2";
+import { MessageModel } from "../models/message";
 @NgModule()
 export class UserService {
     userFound! : boolean;
-    user! : UserModel
+    user! : UserModel;
+    templateSession! : SessionModel;
     constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth) {}
 
     handleLogOff() : void {
@@ -26,5 +29,18 @@ export class UserService {
                 })
             })
         }) 
+    }
+
+    putSessionData(session : SessionModel) : void {
+        this.templateSession = session;
+    }
+
+    getSessionData() : SessionModel {
+        return this.templateSession;
+    }
+
+    sendMessage(session : SessionModel , message : MessageModel) : void {
+        session.conversation.push(message);
+        this.db.list<SessionModel>('sessions').update(session.sessionID , session);
     }
 }

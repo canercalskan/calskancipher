@@ -8,26 +8,25 @@
             <div class="" id="chat-session">
                 <div class="session-navbar text-white">
                     <span><i class="bi bi-person fs-4" style="border:1px solid #EC6600; border-radius: 15rem; padding: .5rem; color: #EC6600;"></i></span>
-                    <span class="ms-3">Caner</span>
+                    <span class="ms-3" *ngIf="displaySession">{{displaySession.endUser.username}}</span>
                     <i class="bi bi-three-dots float-end text-white fs-5" id="session-actions"></i>
                 </div>
 
-                <ul class="chat-field text-white">
-                    <li class="first-user">
-                        Selam
+                <ul class="chat-field text-white" *ngIf="displaySession && displaySession.conversation">
+                    <li class="first-user" *ngFor="let message of displaySession.conversation">
+                        {{message.content}}
                     </li>
-                    <li class="first-user">
-                        Naber
-                    </li>
-                    <li class="end-user">
-                        Merhaba
-                    </li>
+                    <!-- <li class="end-user">
+                        
+                    </li> -->
                 </ul>
 
-                <div id="text-input">
-                    <input type="text" name="message" id="message" placeholder="Type a message..."> 
-                    <i class="bi bi-send d-inline"></i>
-                </div>
+                <form #messageForm = 'ngForm' id="text-input" (submit) = 'sendMessage(messageForm.value); messageForm.resetForm()' ngForm ngNativeValidate>
+                    <input type="text" name="content" id="content" placeholder="Type a message..." ngModel required> 
+                    <button type="submit">
+                        <i class="bi bi-send d-inline"></i>
+                    </button>
+                </form>
                 
             </div>
         </div>
