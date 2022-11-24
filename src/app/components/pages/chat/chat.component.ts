@@ -14,7 +14,9 @@ import { MessageModel } from "src/app/models/message";
 
 export class ChatComponent {
     displaySession! : SessionModel;
-    constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private userService : UserService) {}
+    constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private userService : UserService) {
+        //this.db.
+    }
 
     getSessionData(session : SessionModel) : void {
         this.displaySession = session;

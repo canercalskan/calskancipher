@@ -26,8 +26,13 @@ ul li p:hover {
     cursor:default;
 }
 
+#chat {
+    transition: all .5s;
+}
+
 #chat:hover {
     cursor: pointer;
+    color: green;
 }
 
 ul li:hover {
@@ -38,3 +43,4 @@ hr {
     width: 100%;
     opacity: .1;
 }
+

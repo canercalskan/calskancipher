@@ -58,7 +58,9 @@ export class ActiveUsers {
                 this.db.list<SessionModel>('sessions').valueChanges().subscribe(response => {
                     let found = false;
                     for(let i = 0; i < response.length; i++) {
-                        if(response[i].firstUser.key === this.currentUser.key && response[i].endUser.key === endUser.key) {
+                        if((response[i].firstUser.key === this.currentUser.key && response[i].endUser.key === endUser.key)
+                         || 
+                         (response[i].firstUser.key === endUser.key && response[i].endUser.key === this.currentUser.key)) {
                             found = true;
                             this.chatComponent.getSessionData(response[i]);
                             break;
