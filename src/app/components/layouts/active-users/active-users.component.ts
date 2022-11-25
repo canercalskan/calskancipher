@@ -62,6 +62,13 @@ export class ActiveUsers {
                          || 
                          (response[i].firstUser.key === endUser.key && response[i].endUser.key === this.currentUser.key)) {
                             found = true;
+                            if(this.currentUser.key === response[i].endUser.key) {
+                                let tempUser : UserModel
+                                tempUser = response[i].firstUser;
+                                response[i].firstUser = response[i].endUser;
+                                response[i].endUser = tempUser;
+                                this.db.list<SessionModel>('sessions').update(response[i].sessionID , response[i]);
+                            }
                             this.chatComponent.getSessionData(response[i]);
                             break;
                         }

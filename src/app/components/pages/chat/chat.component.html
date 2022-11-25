@@ -5,7 +5,8 @@
             <div class="active-users-sidebar">
                 <active-users></active-users>
             </div>
-            <div class="" id="chat-session">
+            <div class="overflow-scroll" id="chat-session">
+
                 <div class="session-navbar text-white">
                     <span><i class="bi bi-person fs-4" style="border:1px solid #EC6600; border-radius: 15rem; padding: .5rem; color: #EC6600;"></i></span>
                     <span class="ms-3" *ngIf="displaySession">{{displaySession.endUser.username}}</span>
@@ -13,12 +14,11 @@
                 </div>
 
                 <ul class="chat-field text-white" *ngIf="displaySession && displaySession.conversation">
-                    <li class="first-user" *ngFor="let message of displaySession.conversation">
-                        {{message.content}}
+                    <li class="d-flex" *ngFor="let message of displaySession.conversation">
+                        <span [ngClass]= "{'first-user' : message.sender.uid === currentUserUid , 'end-user' : message.sender.uid != currentUserUid}">
+                            {{message.content}}
+                        </span>
                     </li>
-                    <!-- <li class="end-user">
-                        
-                    </li> -->
                 </ul>
 
                 <form #messageForm = 'ngForm' id="text-input" (submit) = 'sendMessage(messageForm.value); messageForm.resetForm()' ngForm ngNativeValidate>
@@ -30,6 +30,5 @@
                 
             </div>
         </div>
-
     </div>
 </div>

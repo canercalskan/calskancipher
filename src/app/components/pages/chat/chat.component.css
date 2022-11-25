@@ -20,7 +20,7 @@
     position: relative;
     height: 80vh;
     max-height: 100vh;
-    overflow: scroll;
+    /* overflow: scroll; */
     margin-top: 3rem;
     width: 100%;
     margin-left: .5rem;
@@ -33,6 +33,9 @@
 }
 
 .session-navbar {
+    position:sticky;
+    top: 0;
+    width: 100%;
     background-color: #202C33;
     padding: 1rem;
 }
@@ -44,7 +47,7 @@
 #text-input{
     width: 100%;
     background-color: #202C33;
-    position: absolute;
+    position: sticky;
     bottom: 0;
 }
 
@@ -90,9 +93,10 @@
     background-color: #035C4B;
     padding: .5rem 1rem;
     border-radius: 6px;
-    text-align: right;
+    text-align: left;
+    margin-left: auto;
     width: max-content;
-    margin-left: 52rem;
+    margin-right: .8rem;
 }
 
 
@@ -101,8 +105,9 @@
     display: block;
     background-color: rgb(59, 59, 59);
     padding: .5rem 1rem;
-    left: 13px;
+    float: left;
     border-radius: 8px;
+    margin-top: 1rem;
 }
 
 .message-time {

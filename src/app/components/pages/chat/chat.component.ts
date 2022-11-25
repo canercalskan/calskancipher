@@ -14,8 +14,11 @@ import { MessageModel } from "src/app/models/message";
 
 export class ChatComponent {
     displaySession! : SessionModel;
+    currentUserUid! : string
     constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private userService : UserService) {
-        //this.db.
+        this.fireAuth.user.subscribe(u => {
+            this.currentUserUid = u?.uid!
+        })
     }
 
     getSessionData(session : SessionModel) : void {
