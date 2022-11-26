@@ -27,7 +27,7 @@ export class ActiveUsers {
         this.db.list<UserModel>('users').valueChanges().subscribe(users => {
             this.activeUserList = [];
             for(let i = 0; i < users.length; i++) {
-                if(users[i].active === true) {
+                if(users[i].active === true) { //
                     this.activeUserList.push(users[i])
                 }
             }
@@ -35,7 +35,6 @@ export class ActiveUsers {
     }
 
     activateSession(endUser : UserModel) : void {
-
         let newSession = new SessionModel()
         newSession.firstUser = this.currentUser;
         newSession.endUser = endUser;
@@ -62,13 +61,13 @@ export class ActiveUsers {
                          || 
                          (response[i].firstUser.key === endUser.key && response[i].endUser.key === this.currentUser.key)) {
                             found = true;
-                            if(this.currentUser.key === response[i].endUser.key) {
-                                let tempUser : UserModel
-                                tempUser = response[i].firstUser;
-                                response[i].firstUser = response[i].endUser;
-                                response[i].endUser = tempUser;
-                                this.db.list<SessionModel>('sessions').update(response[i].sessionID , response[i]);
-                            }
+                            // if(this.currentUser.key === response[i].endUser.key) {
+                            //     let tempUser : UserModel
+                            //     tempUser = response[i].firstUser;
+                            //     response[i].firstUser = response[i].endUser;
+                            //     response[i].endUser = tempUser;
+                            //     this.db.list<SessionModel>('sessions').update(response[i].sessionID , response[i]);
+                            // }
                             this.chatComponent.getSessionData(response[i]);
                             break;
                         }

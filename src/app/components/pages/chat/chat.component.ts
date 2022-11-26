@@ -14,10 +14,19 @@ import { MessageModel } from "src/app/models/message";
 
 export class ChatComponent {
     displaySession! : SessionModel;
+    currentUser! : UserModel;
     currentUserUid! : string
     constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private userService : UserService) {
         this.fireAuth.user.subscribe(u => {
             this.currentUserUid = u?.uid!
+            this.db.list<UserModel>('users').valueChanges().subscribe(r => {
+                for(var i = 0 ; i < r.length ; i++ ){
+                    if(r[i].uid === u?.uid!) {
+                        this.currentUser = r[i];
+                        break;
+                    }
+                }
+            })
         })
     }
 
@@ -26,7 +35,7 @@ export class ChatComponent {
     }
 
     sendMessage(message : MessageModel) : void {
-        message.sender = this.displaySession.firstUser;
+        message.sender = this.currentUser;
         this.userService.sendMessage(this.displaySession , message);
     }
 }
