@@ -6,6 +6,7 @@ import { UserModel } from "src/app/models/user";
 import { SessionModel } from "src/app/models/session";
 import { UserService } from "src/app/services/user";
 import { MessageModel } from "src/app/models/message";
+import { SwalComponent } from "@sweetalert2/ngx-sweetalert2";
 @Component({
     selector : 'chat',
     templateUrl : './chat.component.html',
@@ -31,11 +32,55 @@ export class ChatComponent {
     }
 
     getSessionData(session : SessionModel) : void {
+        if(session.endUser.uid === this.currentUser.uid) {
+            session.endUser.username = session.firstUser.username;
+        }
         this.displaySession = session;
     }
 
     sendMessage(message : MessageModel) : void {
         message.sender = this.currentUser;
         this.userService.sendMessage(this.displaySession , message);
+    }
+
+    deleteConversation(session : SessionModel) : void {
+        Swal.fire({
+            title : 'Success',
+            text : 'Conversation deleted',
+            showCloseButton : true,
+            showConfirmButton : true,
+            showDenyButton : true,
+            showLoaderOnDeny : true,
+        }).then(() => {
+            this.db.list<SessionModel>('sessions').remove(session.sessionID).then(() => {
+            })
+        }
+    )}
+
+    // this.db.list<SessionModel>('sessions').remove(session.sessionID);
+
+    blockUser(session : SessionModel) : void {
+        if(session.endUser === this.currentUser) {
+            session.endUser = session.firstUser;
+            session.firstUser = this.currentUser;
+        }
+        // if(!session.firstUser.blockedUsers) {
+        //     session.firstUser.blockedUsers = [];
+        // }
+        // if(session.endUser.uid === this.currentUser.uid) {
+        //     Swal.fire('Error' , 'You cannot block yourself.' , 'error').then(()=> {
+        //         return;
+        //     })
+        // }
+        session.firstUser.blockedUsers.push(session.endUser.key);
+        this.db.list<UserModel>('users').update(session.firstUser.key , session.firstUser).then(() => {
+            Swal.fire('Success!' , 'You have blocked ' + session.endUser.username , 'success').then(() => {
+                location.reload();
+            })
+        }).catch(err => {
+            Swal.fire('Error' , 'Something went wrong while blocking ' + session.endUser.username , 'error').then(() => {
+                location.reload();
+            })
+        })
     }
 }

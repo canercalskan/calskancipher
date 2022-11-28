@@ -15,6 +15,7 @@ export class SessionModel {
         password: ' ',
         confirmPassword: ' ',
         sessions: [],
+        blockedUsers : [],
         active: false,
         key: ' ',
       },

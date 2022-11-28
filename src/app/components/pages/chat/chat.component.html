@@ -1,16 +1,24 @@
 <div class="wrapper">
-    <div class="container">
-        <chat-navbar></chat-navbar>
+    <div style="max-width: 100vw;">
+            <chat-navbar></chat-navbar>
         <div class="content">
             <div class="active-users-sidebar">
                 <active-users></active-users>
             </div>
-            <div class="overflow-scroll" id="chat-session">
+            <div id="chat-session">
 
                 <div class="session-navbar text-white">
-                    <span><i class="bi bi-person fs-4" style="border:1px solid #EC6600; border-radius: 15rem; padding: .5rem; color: #EC6600;"></i></span>
-                    <span class="ms-3" *ngIf="displaySession">{{displaySession.endUser.username}}</span>
-                    <i class="bi bi-three-dots float-end text-white fs-5" id="session-actions"></i>
+                    <span><i class="bi bi-person fs-4 p-2" style="border:1px solid #EC6600; border-radius: 15rem; color: #EC6600;"></i></span>
+                    <span class=" ms-3" *ngIf="displaySession">{{displaySession.endUser.username}}</span>
+                    <i class="dd bi bi-three-dots float-end text-white fs-5" id="session-actions">
+                        <input type="checkbox">
+                        <div class="dd-c">
+                            <ul>
+                                <li (click) = 'deleteConversation(displaySession)'>Delete Conversation</li>
+                                <li (click) = 'blockUser(displaySession)'>Block User</li>
+                            </ul>
+                        </div>
+                    </i>
                 </div>
 
                 <ul class="chat-field text-white" *ngIf="displaySession && displaySession.conversation">
@@ -21,7 +29,7 @@
                     </li>
                 </ul>
 
-                <form #messageForm = 'ngForm' id="text-input" (submit) = 'sendMessage(messageForm.value); messageForm.resetForm()' ngForm ngNativeValidate>
+                <form #messageForm = 'ngForm' id="messageForm" (submit) = 'sendMessage(messageForm.value); messageForm.resetForm()' ngForm ngNativeValidate>
                     <input type="text" name="content" id="content" placeholder="Type a message..." ngModel required> 
                     <button type="submit">
                         <i class="bi bi-send d-inline"></i>

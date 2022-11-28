@@ -9,5 +9,6 @@ export class UserModel {
     uid! : string;
     active! : boolean;
     key! : string;
-    sessions : string[] = ['']  
+    sessions : string[] = [''];
+    blockedUsers : string[] = [' '];  
 }
