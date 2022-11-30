@@ -7,7 +7,7 @@
             </div>
             <div id="chat-session">
 
-                <div class="session-navbar text-white">
+                <div class="session-navbar text-white" *ngIf="displaySession">
                     <span><i class="bi bi-person fs-4 p-2" style="border:1px solid #EC6600; border-radius: 15rem; color: #EC6600;"></i></span>
                     <span class=" ms-3" *ngIf="displaySession">{{endUserName}}</span>
                     <i class="dd bi bi-three-dots float-end text-white fs-5" id="session-actions">
@@ -29,7 +29,7 @@
                     </li>
                 </ul>
 
-                <form #messageForm = 'ngForm' id="messageForm" (submit) = 'sendMessage(messageForm.value); messageForm.resetForm()' ngForm ngNativeValidate>
+                <form *ngIf="displaySession" #messageForm = 'ngForm' id="messageForm" (submit) = 'sendMessage(messageForm.value); messageForm.resetForm()' ngForm ngNativeValidate>
                     <input type="text" name="content" id="content" placeholder="Type a message..." ngModel required> 
                     <button type="submit">
                         <i class="bi bi-send d-inline"></i>

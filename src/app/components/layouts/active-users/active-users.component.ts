@@ -29,7 +29,7 @@ export class ActiveUsers {
         this.db.list<UserModel>('users').valueChanges().subscribe(users => {
             this.activeUserList = [];
             for(let i = 0; i < users.length; i++) {
-                if(users[i].active === true) { //
+                if(users[i].active === true && users[i].uid !== this.currentUser.uid) { //
                     this.activeUserList.push(users[i])
                 }
             }

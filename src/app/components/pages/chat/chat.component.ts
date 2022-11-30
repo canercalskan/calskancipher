@@ -34,11 +34,6 @@ export class ChatComponent {
 
     getSessionData(session : SessionModel) : void {
         this.displaySession = session;
-        // if(this.displaySession.endUser.uid === this.currentUser.uid) {
-        //     this.displaySession.endUser = this.displaySession.firstUser;
-        //     this.displaySession.firstUser = this.currentUser;
-        //     this.db.list<SessionModel>('sessions').update(this.displaySession.sessionID , this.displaySession);
-        // }
         if(this.displaySession.endUser.username === this.currentUser.username) {
             this.endUserName = this.displaySession.firstUser.username;
         }
@@ -50,7 +45,6 @@ export class ChatComponent {
     sendMessage(message : MessageModel) : void {
         let blocked = false;
         message.sender = this.currentUser;
-        console.log(this.displaySession);
         for(let i = 0; i < this.displaySession.endUser.blockedUsers.length; i++) {
             if(message.sender.key === this.displaySession.endUser.blockedUsers[i]) {
                 blocked = true;
@@ -97,7 +91,7 @@ export class ChatComponent {
 
 
     blockUser(session : SessionModel) : void {
-
+        let alreadyBlocked = false;
         if(session.firstUser.key === session.endUser.key) {
             Swal.fire('Error' , 'You cannot block yourself' , 'error').then(() => {
                return;
@@ -105,28 +99,61 @@ export class ChatComponent {
         }
         else {
             if(session.endUser.key === this.currentUser.key) {
-                this.currentUser.blockedUsers.push(session.firstUser.key)
-                session.endUser.blockedUsers.push(session.firstUser.key)
-                this.db.list<SessionModel>('sessions').update(session.sessionID , session).then(() => {
-                    this.db.list<UserModel>('users').update(this.currentUser.key , this.currentUser).then(() => {
-                        Swal.fire('Success' , 'You have blocked ' + session.firstUser.username, 'success').then(() => {
-                            location.reload();
+                this.db.object<SessionModel>('sessions/' + session.sessionID).valueChanges().subscribe(r => {
+                    for(let i = 0; i < r?.endUser.blockedUsers.length!; i++) {
+                        if(session.firstUser.key === r?.endUser.blockedUsers[i]) {
+                            Swal.fire({
+                                showConfirmButton : false,
+                                showCancelButton : true,
+                                cancelButtonAriaLabel : 'Close',
+                                icon : 'error',
+                                title : 'Error',
+                                text : 'You have already blocked ' + session.firstUser.username, 
+                            })
+                            alreadyBlocked = true;
+                        }
+                    }
+                    if(!alreadyBlocked) {
+                        this.currentUser.blockedUsers.push(session.firstUser.key)
+                        session.endUser.blockedUsers.push(session.firstUser.key)
+                        this.db.list<SessionModel>('sessions').update(session.sessionID , session).then(() => {
+                            this.db.list<UserModel>('users').update(this.currentUser.key , this.currentUser).then(() => {
+                                Swal.fire('Success' , 'You have blocked ' + session.firstUser.username, 'success').then(() => {
+                                    location.reload();
+                                })
+                            })
                         })
-                    })
+                }
                 })
             }
             else {
-                this.currentUser.blockedUsers.push(session.endUser.key)
-                session.firstUser.blockedUsers.push(session.endUser.key)
-                this.db.list<SessionModel>('sessions').update(session.sessionID , session).then(() => {
-                    this.db.list<UserModel>('users').update(this.currentUser.key , this.currentUser).then(() => {
-                        Swal.fire('Success' , 'You have blocked ' + session.endUser.username , 'success').then(() => {
-                            location.reload();
+                this.db.object<SessionModel>('sessions/' + session.sessionID).valueChanges().subscribe(r => {
+                    for(let i = 0; i < r?.firstUser.blockedUsers.length!; i++) {
+                        if(r?.firstUser.blockedUsers[i] === session.endUser.key) {
+                            Swal.fire({
+                                showConfirmButton : false,
+                                showCancelButton : true,
+                                cancelButtonAriaLabel : 'Close',
+                                icon : 'error',
+                                title : 'Error',
+                                text : 'You already blocked ' + session.endUser.username, 
+                            })
+                            alreadyBlocked = true;
+                        }
+                    }
+                    if(!alreadyBlocked) {
+                        this.currentUser.blockedUsers.push(session.endUser.key)
+                        session.firstUser.blockedUsers.push(session.endUser.key)
+                        this.db.list<SessionModel>('sessions').update(session.sessionID , session).then(() => {
+                            this.db.list<UserModel>('users').update(this.currentUser.key , this.currentUser).then(() => {
+                                Swal.fire('Success' , 'You have blocked ' + session.endUser.username , 'success').then(() => {
+                                    location.reload();
+                                })
+                            })
                         })
-                    })
+                    }
                 })
             }
         }
-       
     }
 }
