@@ -25,6 +25,7 @@ export class LoginComponent {
     }
 
     handleLoginSubmission(user : UserModel){
+        this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
         this.fireAuth.signInWithEmailAndPassword(user.email , user.password).then((activatedUser) => {
             this.db.list<UserModel>('users').valueChanges().subscribe(r => {
                 r.forEach(u => {
@@ -92,7 +93,7 @@ export class LoginComponent {
             let newUser = new UserModel();
             newUser.email = user.email;
             newUser.username = user.username;
-            //this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+            this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
             this.fireAuth.createUserWithEmailAndPassword(user.email , user.password).then((r) => {
                     newUser.uid = r.user!.uid!;
                     this.fireAuth.user.subscribe(u => {
@@ -121,7 +122,7 @@ export class LoginComponent {
         let registered : boolean;
         let newUser = new UserModel();
         let googleProvider = new firebase.auth.GoogleAuthProvider();
-        //this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
+        this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION)
         this.fireAuth.signInWithPopup(googleProvider).then((r) => {
             newUser.active = true;
             newUser.username = r.user?.displayName!;

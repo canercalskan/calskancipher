@@ -34,27 +34,52 @@ export class ChatComponent {
 
     getSessionData(session : SessionModel) : void {
         this.displaySession = session;
-        // alttaki mevzu olmuyor, sanırım session firstUser ve endUser ların modellemesini tamamen değiştirmek gerekli.
-        // veya , message modelinin içindeki sender kişisini kullanarak blocked? check atabiliriz.
-        if(this.displaySession.endUser.uid === this.currentUser.uid) {
-            this.displaySession.endUser = this.displaySession.firstUser;
-            this.displaySession.firstUser = this.currentUser;
-            this.db.list<SessionModel>('sessions').update(this.displaySession.sessionID , this.displaySession);
+        // if(this.displaySession.endUser.uid === this.currentUser.uid) {
+        //     this.displaySession.endUser = this.displaySession.firstUser;
+        //     this.displaySession.firstUser = this.currentUser;
+        //     this.db.list<SessionModel>('sessions').update(this.displaySession.sessionID , this.displaySession);
+        // }
+        if(this.displaySession.endUser.username === this.currentUser.username) {
+            this.endUserName = this.displaySession.firstUser.username;
         }
-
-
-        
-        // if(this.displaySession.endUser.username === this.currentUser.username) {
-        //     this.endUserName = this.displaySession.firstUser.username;
-        // }
-        // else {
-        //     this.endUserName = this.displaySession.endUser.username;
-        // }
+        else {
+            this.endUserName = this.displaySession.endUser.username;
+        }
     }
 
     sendMessage(message : MessageModel) : void {
+        let blocked = false;
         message.sender = this.currentUser;
-        this.userService.sendMessage(this.displaySession , message);
+        console.log(this.displaySession);
+        for(let i = 0; i < this.displaySession.endUser.blockedUsers.length; i++) {
+            if(message.sender.key === this.displaySession.endUser.blockedUsers[i]) {
+                blocked = true;
+            }
+        }
+
+        for(let i = 0 ; i < this.displaySession.firstUser.blockedUsers.length ; i++) {
+            if(message.sender.key === this.displaySession.firstUser.blockedUsers[i]) {
+                blocked = true;
+            }
+        }
+
+        if(!blocked) {
+            this.userService.sendMessage(this.displaySession , message);
+        }
+        else {
+            Swal.fire({
+                icon : 'error',
+                title : 'Error',
+                text : 'You are blocked by ' + this.endUserName,
+                showCancelButton : true,
+                showConfirmButton : false,
+                cancelButtonAriaLabel : 'Close',
+                cancelButtonColor : 'red'
+
+            }).then(() => {
+                return;
+            })
+        }
     }
 
     deleteConversation(session : SessionModel) : void {
@@ -79,16 +104,28 @@ export class ChatComponent {
             })
         }
         else {
-            session.firstUser.blockedUsers.push(session.endUser.key);
-            this.db.list<UserModel>('users').update(session.firstUser.key , session.firstUser).then(() => {
-                Swal.fire('Success!' , 'You have blocked ' + session.endUser.username , 'success').then(() => {
-                    location.reload();
+            if(session.endUser.key === this.currentUser.key) {
+                this.currentUser.blockedUsers.push(session.firstUser.key)
+                session.endUser.blockedUsers.push(session.firstUser.key)
+                this.db.list<SessionModel>('sessions').update(session.sessionID , session).then(() => {
+                    this.db.list<UserModel>('users').update(this.currentUser.key , this.currentUser).then(() => {
+                        Swal.fire('Success' , 'You have blocked ' + session.firstUser.username, 'success').then(() => {
+                            location.reload();
+                        })
+                    })
                 })
-            }).catch(err => {
-                Swal.fire('Error' , 'Something went wrong while blocking ' + session.endUser.username , 'error').then(() => {
-                    location.reload();
+            }
+            else {
+                this.currentUser.blockedUsers.push(session.endUser.key)
+                session.firstUser.blockedUsers.push(session.endUser.key)
+                this.db.list<SessionModel>('sessions').update(session.sessionID , session).then(() => {
+                    this.db.list<UserModel>('users').update(this.currentUser.key , this.currentUser).then(() => {
+                        Swal.fire('Success' , 'You have blocked ' + session.endUser.username , 'success').then(() => {
+                            location.reload();
+                        })
+                    })
                 })
-            })
+            }
         }
        
     }
