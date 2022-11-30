@@ -12,7 +12,9 @@ import { ChatComponent } from "../../pages/chat/chat.component";
 
 export class ActiveUsers {
     activeUserList : UserModel[] = [];
-    currentUser! : UserModel
+    currentUser! : UserModel;
+    firstUserContains! : boolean;
+    endUserContains! : boolean;
     constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private chatComponent : ChatComponent){
         this.fireAuth.user.subscribe(currentuser => {
             this.db.list<UserModel>('users').valueChanges().subscribe(users => {
@@ -34,11 +36,81 @@ export class ActiveUsers {
         })
     }
 
+    // activateSession(endUser : UserModel) : void {
+    //     let newSession = new SessionModel()
+    //     newSession.firstUser = this.currentUser;
+    //     newSession.endUser = endUser;
+    //     newSession.conversation = [];
+    //    this.db.list<SessionModel>('sessions').valueChanges().subscribe(response => {
+    //         if(response.length === 0) {
+    //             this.db.list<SessionModel>('sessions').push(newSession).then(response => {
+    //                 newSession.sessionID = response.key!;
+    //                 this.db.list('sessions').update(newSession.sessionID , newSession).then(() => {
+    //                     this.currentUser.sessions.push(newSession.sessionID);
+    //                     endUser.sessions.push(newSession.sessionID);
+    //                     this.db.list('users').update(this.currentUser.key , this.currentUser).then(() => {
+    //                         this.db.list('users').update(endUser.key , endUser);
+    //                         this.chatComponent.getSessionData(newSession);
+    //                         return;
+    //                     }) 
+    //                 })
+    //             })
+    //         }
+    //         else
+    //          {
+    //             this.db.list<SessionModel>('sessions').valueChanges().subscribe(response => {
+    //                 let found = false;
+    //                 let deleted = false;
+    //                 for(let i = 0; i < response.length; i++) {
+    //                     if((response[i].firstUser.key === this.currentUser.key && response[i].endUser.key === endUser.key)
+    //                     || 
+    //                     (response[i].firstUser.key === endUser.key && response[i].endUser.key === this.currentUser.key)) {
+    //                         found = true;
+    //                         if(this.currentUser.sessions.includes(response[i].sessionID , 0) && endUser.sessions.includes(response[i].sessionID , 0)) {
+    //                             this.chatComponent.getSessionData(response[i]);
+    //                             break;
+    //                         }
+    //                         else {
+    //                             this.db.list<SessionModel>('sessions').push(newSession).then(response => {
+    //                                 newSession.sessionID = response.key!;
+    //                                 this.db.list('sessions').update(newSession.sessionID , newSession).then(() => {
+    //                                     this.currentUser.sessions.push(newSession.sessionID);
+    //                                     endUser.sessions.push(newSession.sessionID);
+    //                                     this.db.list('users').update(this.currentUser.key , this.currentUser).then(() => {
+    //                                         this.db.list('users').update(endUser.key , endUser);
+    //                                         this.chatComponent.getSessionData(newSession);
+    //                                         return; 
+    //                                     }) 
+    //                                 })
+    //                             })
+    //                         }
+    //                     }
+    //                 }
+
+    //                 if(!found) {
+    //                     this.db.list<SessionModel>('sessions').push(newSession).then(response => {
+    //                         newSession.sessionID = response.key!;
+    //                         this.db.list('sessions').update(newSession.sessionID , newSession).then(() => {
+    //                             this.currentUser.sessions.push(newSession.sessionID);
+    //                             endUser.sessions.push(newSession.sessionID);
+    //                             this.db.list('users').update(this.currentUser.key , this.currentUser).then(() => {
+    //                                 this.db.list('users').update(endUser.key , endUser);
+    //                                 this.chatComponent.getSessionData(newSession);
+    //                                 return;
+    //                             }) 
+    //                         })
+    //                     })
+    //                 }
+    //             })
+    //         }
+    //    })
+    // }
     activateSession(endUser : UserModel) : void {
         let newSession = new SessionModel()
         newSession.firstUser = this.currentUser;
         newSession.endUser = endUser;
         newSession.conversation = [];
+
         this.db.list<SessionModel>('sessions').valueChanges().subscribe(response => {
             if(response.length === 0) {
                 this.db.list<SessionModel>('sessions').push(newSession).then(response => {
@@ -61,13 +133,6 @@ export class ActiveUsers {
                          || 
                          (response[i].firstUser.key === endUser.key && response[i].endUser.key === this.currentUser.key)) {
                             found = true;
-                            // if(this.currentUser.key === response[i].endUser.key) {
-                            //     let tempUser : UserModel
-                            //     tempUser = response[i].firstUser;
-                            //     response[i].firstUser = response[i].endUser;
-                            //     response[i].endUser = tempUser;
-                            //     this.db.list<SessionModel>('sessions').update(response[i].sessionID , response[i]);
-                            // }
                             this.chatComponent.getSessionData(response[i]);
                             break;
                         }
@@ -89,4 +154,5 @@ export class ActiveUsers {
             }
         })        
     }
+
 }

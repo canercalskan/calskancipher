@@ -6,7 +6,7 @@ import { UserModel } from "src/app/models/user";
 import { SessionModel } from "src/app/models/session";
 import { UserService } from "src/app/services/user";
 import { MessageModel } from "src/app/models/message";
-import { SwalComponent } from "@sweetalert2/ngx-sweetalert2";
+
 @Component({
     selector : 'chat',
     templateUrl : './chat.component.html',
@@ -15,6 +15,7 @@ import { SwalComponent } from "@sweetalert2/ngx-sweetalert2";
 
 export class ChatComponent {
     displaySession! : SessionModel;
+    endUserName! : string;
     currentUser! : UserModel;
     currentUserUid! : string
     constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private userService : UserService) {
@@ -32,10 +33,23 @@ export class ChatComponent {
     }
 
     getSessionData(session : SessionModel) : void {
-        if(session.endUser.uid === this.currentUser.uid) {
-            session.endUser.username = session.firstUser.username;
-        }
         this.displaySession = session;
+        // alttaki mevzu olmuyor, sanırım session firstUser ve endUser ların modellemesini tamamen değiştirmek gerekli.
+        // veya , message modelinin içindeki sender kişisini kullanarak blocked? check atabiliriz.
+        if(this.displaySession.endUser.uid === this.currentUser.uid) {
+            this.displaySession.endUser = this.displaySession.firstUser;
+            this.displaySession.firstUser = this.currentUser;
+            this.db.list<SessionModel>('sessions').update(this.displaySession.sessionID , this.displaySession);
+        }
+
+
+        
+        // if(this.displaySession.endUser.username === this.currentUser.username) {
+        //     this.endUserName = this.displaySession.firstUser.username;
+        // }
+        // else {
+        //     this.endUserName = this.displaySession.endUser.username;
+        // }
     }
 
     sendMessage(message : MessageModel) : void {
@@ -44,43 +58,38 @@ export class ChatComponent {
     }
 
     deleteConversation(session : SessionModel) : void {
-        Swal.fire({
-            title : 'Success',
-            text : 'Conversation deleted',
-            showCloseButton : true,
-            showConfirmButton : true,
-            showDenyButton : true,
-            showLoaderOnDeny : true,
-        }).then(() => {
-            this.db.list<SessionModel>('sessions').remove(session.sessionID).then(() => {
-            })
-        }
-    )}
+        // session.firstUser.sessions = session.firstUser.sessions.filter(s => s !== session.sessionID)
+        // session.endUser.sessions = session.endUser.sessions.filter(s => s !== session.sessionID)
+        // this.db.list('users').update(session.firstUser.key , session.firstUser).then(() => {
+        //     this.db.list('users').update(session.endUser.key , session.endUser)
+        // }).then(() => {
+        //         Swal.fire('Success' , 'Conversation with ' + session.endUser.username + ' deleted.' , 'success').then(() => {
+        //             location.reload();
+        //         })
+        //     })
+        Swal.fire('Success' , 'Conversation deletion is experimental.. May be really implemented in the future...' , 'success');
+    }
 
-    // this.db.list<SessionModel>('sessions').remove(session.sessionID);
 
     blockUser(session : SessionModel) : void {
-        if(session.endUser === this.currentUser) {
-            session.endUser = session.firstUser;
-            session.firstUser = this.currentUser;
+
+        if(session.firstUser.key === session.endUser.key) {
+            Swal.fire('Error' , 'You cannot block yourself' , 'error').then(() => {
+               return;
+            })
         }
-        // if(!session.firstUser.blockedUsers) {
-        //     session.firstUser.blockedUsers = [];
-        // }
-        // if(session.endUser.uid === this.currentUser.uid) {
-        //     Swal.fire('Error' , 'You cannot block yourself.' , 'error').then(()=> {
-        //         return;
-        //     })
-        // }
-        session.firstUser.blockedUsers.push(session.endUser.key);
-        this.db.list<UserModel>('users').update(session.firstUser.key , session.firstUser).then(() => {
-            Swal.fire('Success!' , 'You have blocked ' + session.endUser.username , 'success').then(() => {
-                location.reload();
+        else {
+            session.firstUser.blockedUsers.push(session.endUser.key);
+            this.db.list<UserModel>('users').update(session.firstUser.key , session.firstUser).then(() => {
+                Swal.fire('Success!' , 'You have blocked ' + session.endUser.username , 'success').then(() => {
+                    location.reload();
+                })
+            }).catch(err => {
+                Swal.fire('Error' , 'Something went wrong while blocking ' + session.endUser.username , 'error').then(() => {
+                    location.reload();
+                })
             })
-        }).catch(err => {
-            Swal.fire('Error' , 'Something went wrong while blocking ' + session.endUser.username , 'error').then(() => {
-                location.reload();
-            })
-        })
+        }
+       
     }
 }

@@ -40,6 +40,14 @@ export class UserService {
     }
 
     sendMessage(session : SessionModel , message : MessageModel) : void {
+        //Mesajı gönderen kullanıcı, mesajı alan kullanıcının bloklular listesindeyse bu fonksiyon direkt return atmalı
+        //Problem : Session oluşturulduktan sonra firstUser ve endUser kullanıcıları karışıyor, tekrar düzenlenmeliler.
+        session.endUser.blockedUsers.forEach(key => {
+            if(key === message.sender.key) {
+                Swal.fire('Error' , 'You are blocked by ' + session.endUser.username , 'error')
+                return;
+            }
+        })
         session.conversation.push(message);
         this.db.list<SessionModel>('sessions').update(session.sessionID , session);
     }
