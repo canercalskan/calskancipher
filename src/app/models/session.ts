@@ -19,6 +19,7 @@ export class SessionModel {
         active: false,
         key: ' ',
       },
+      time : ' ',
     },
   ];
 }

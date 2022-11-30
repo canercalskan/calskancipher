@@ -6,6 +6,9 @@
                 <active-users></active-users>
             </div>
             <div id="chat-session">
+                <!-- Eğer session init edilmemişse, ortadaki boş alana kullanıcı profil işlemleri ekle -->
+                <!-- Anonim profil image gözüksün, altında update PP olsun -->
+                <!-- Status belirleme olsun wpdeki gibi -->
 
                 <div class="session-navbar text-white" *ngIf="displaySession">
                     <span><i class="bi bi-person fs-4 p-2" style="border:1px solid #EC6600; border-radius: 15rem; color: #EC6600;"></i></span>
@@ -25,6 +28,7 @@
                     <li class="d-flex" *ngFor="let message of displaySession.conversation">
                         <span [ngClass]= "{'first-user' : message.sender.uid === currentUserUid , 'end-user' : message.sender.uid != currentUserUid}">
                             {{message.content}}
+                            <span class="message-time">{{message.time}}</span>
                         </span>
                     </li>
                 </ul>

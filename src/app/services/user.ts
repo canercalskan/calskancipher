@@ -40,6 +40,22 @@ export class UserService {
     }
 
     sendMessage(session : SessionModel , message : MessageModel) : void {
+        let date = new Date();
+        let time! : string;
+        if(date.getHours() <= 10 && date.getMinutes() <= 10) {
+            time = '0' + date.getHours() + ':0' + date.getMinutes()
+        }
+        else if(date.getHours() <= 10 && date.getMinutes() >= 10) {
+            time = '0' + date.getHours() + ':' + date.getMinutes()
+        }
+        else if(date.getHours() >= 10 && date.getMinutes() <= 10) {
+            time = date.getHours() + ':0' + date.getMinutes();
+        }
+        else {
+            time = date.getHours() + ':' + date.getMinutes();
+        }
+
+        message.time = time!;
         session.conversation.push(message);
         this.db.list<SessionModel>('sessions').update(session.sessionID , session);
     }
