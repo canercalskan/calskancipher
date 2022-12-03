@@ -18,6 +18,8 @@ export class ChatComponent {
     endUserName! : string;
     currentUser! : UserModel;
     currentUserUid! : string
+    selectedFile! : FileList;
+    showUploading! : boolean;
     constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private userService : UserService) {
         this.fireAuth.user.subscribe(u => {
             this.currentUserUid = u?.uid!
@@ -30,6 +32,14 @@ export class ChatComponent {
                 }
             })
         })
+    }
+
+    showUploadingIcon() : void {
+        this.showUploading = true;
+    }
+
+    hideUploadingIcon() : void {
+        this.showUploading = false;
     }
 
     getSessionData(session : SessionModel) : void {
@@ -156,7 +166,20 @@ export class ChatComponent {
             }
         }
     }
-    uploadImage(file : File) : void {
-        this.userService.pushFileToStorage(this.currentUser , file)
+
+    handleImageSelection(event : any) : void {
+        this.selectedFile = event.target.files;
+        console.log(this.selectedFile);
+    }
+
+    uploadImage() : void {
+        const file : FileList | null = this.selectedFile;
+        this.showUploading = true;
+        if(this.selectedFile) {
+            this.userService.pushFileToStorage(this.currentUser,file);
+        }
+        else {
+            Swal.fire('Hata' , 'Bilinmeyen bir hata oluştu.' , 'error');
+        }
     }
 }

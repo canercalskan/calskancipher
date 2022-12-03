@@ -11,12 +11,5 @@ export class UserModel {
     key! : string;
     sessions : string[] = [''];
     blockedUsers : string[] = [' '];  
-    // profilePicture!: {
-    //     file: FileList;
-    //     url: string;
-    // };
-    // constructor(files : FileList) {
-    //     this.profilePicture.file = files
-    //     this.profilePicture.url = ' '
-    // }
+    profilePicture! : string;
 }

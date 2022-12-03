@@ -8,39 +8,51 @@ import Swal from "sweetalert2";
 import { MessageModel } from "../models/message";
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { finalize } from "rxjs";
+import { ChatComponent } from "../components/pages/chat/chat.component";
 
 @NgModule()
 export class UserService {
     userFound! : boolean;
     user! : UserModel;
     templateSession! : SessionModel;
+    selectedFile! : FileList
     constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private storage : AngularFireStorage) {}
-
     private basePath = '/uploads/';
     urls: string[] = []
     productUrls: string[] = [];
+    chatComp! : ChatComponent
 
-    pushFileToStorage(currentUser : UserModel , fileUpload: File): void {
-        // let filePath = `${this.basePath}/${fileUpload.name}`;
-        // let storageRef = this.storage.ref(filePath);
-        // let uploadTask = this.storage.upload(filePath, fileUpload);
-        // uploadTask.snapshotChanges().pipe(
-        //   finalize(() => {
-        //     storageRef.getDownloadURL().subscribe(downloadURL => {
-        //         this.saveFileData(currentUser)
-        //     })
-        //   })
-        // ).subscribe()
+    pushFileToStorage(currentUser : UserModel , fileUpload: FileList): void {
+        let filePath = `${this.basePath}/${fileUpload.item(0)?.name}`;
+        let storageRef = this.storage.ref(filePath);
+        let uploadTask = this.storage.upload(filePath, fileUpload.item(0));
+        uploadTask.snapshotChanges().pipe(
+          finalize(() => {
+            //this.chatComp.showUploadingIcon();
+            storageRef.getDownloadURL().subscribe(downloadURL => {
+                this.saveFileData(currentUser , downloadURL)
+            })
+          })
+        ).subscribe()
       }
     
-    private saveFileData(currentUser : UserModel): void {
-        // this.db.list(this.basePath).push(currentUser.files).then(() => {
-        //     this.db.object('users/' + currentUser.key).update(currentUser).then(() => {
-        //         Swal.fire('Success' , 'You updated your profile picture' , 'success')
-        //     })
-        // }).catch(error => {
-        //   Swal.fire('' , error.code)
-        // });
+    private saveFileData(currentUser : UserModel , downloadURL : string): void {
+        currentUser.profilePicture = downloadURL;
+        this.db.list(this.basePath).push(currentUser.profilePicture).then(() => {
+            this.db.object('users/' + currentUser.key).update(currentUser).then(() => {
+                //this.chatComp.hideUploadingIcon();
+                Swal.fire({
+                    title : 'Success',
+                    text : 'Profile picture updated',
+                    showConfirmButton : true,
+                    confirmButtonColor : 'green',
+                    confirmButtonText : 'Cool!',
+                    icon : 'success'
+                }).then(() => {
+                    location.reload()
+                })
+            })
+        })
     }
 
 

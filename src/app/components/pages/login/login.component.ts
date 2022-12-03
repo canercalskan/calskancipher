@@ -93,6 +93,7 @@ export class LoginComponent {
             let newUser = new UserModel();
             newUser.email = user.email;
             newUser.username = user.username;
+            newUser.profilePicture = ' ';
             this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
             this.fireAuth.createUserWithEmailAndPassword(user.email , user.password).then((r) => {
                     newUser.uid = r.user!.uid!;
@@ -118,7 +119,7 @@ export class LoginComponent {
     }
     
     handleGoogleLogin() : void {
-        let userFound : boolean;
+       // let userFound : boolean;
         let registered : boolean;
         let newUser = new UserModel();
         let googleProvider = new firebase.auth.GoogleAuthProvider();
@@ -128,6 +129,7 @@ export class LoginComponent {
             newUser.username = r.user?.displayName!;
             newUser.email = r.user?.email!;
             newUser.uid = r.user?.uid!;
+            newUser.profilePicture = ' ';
             this.db.list<UserModel>('users').valueChanges().subscribe(userlist => {
                 for(let i = 0; i< userlist.length; i++) {
                     if(userlist[i].uid === r.user?.uid) {

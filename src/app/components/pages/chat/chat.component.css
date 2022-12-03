@@ -273,6 +273,67 @@
     background-color: grey;
   }
 
+  .preferences {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .preferences .options {
+    margin-top: 2rem;
+  }
+
+  .preferences p {
+    width: 305px;
+  }
+
+  .preferences p span input {
+    position: relative;
+    top: 8px;
+    float: right;
+  }
+
+  .dot1 {
+    width: 8px;
+    height: 8px;
+    animation: ScaleInOut 0.6s ease-in-out 0.2s infinite alternate;
+}
+
+.dot2 {
+    width: 8px;
+    height: 8px;
+    animation: ScaleInOut 0.6s ease-in-out 0.4s infinite alternate;
+}
+
+.dot3 {
+    width: 8px;
+    height: 8px;
+    animation: ScaleInOut 0.6s ease-in-out 0.6s infinite alternate;
+}
+
+.uploading {
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: .7rem;
+}
+
+.uploading div {
+  display: inline-block;
+}
+   
+
+  @keyframes ScaleInOut {
+    0% {
+        transform: scale(0.8);
+    }
+
+    100% {
+        transform: scale(1.5);
+    }
+}
+
 @media screen and (max-height : 900px) {
     li:last-child {
         padding-bottom: 4rem;

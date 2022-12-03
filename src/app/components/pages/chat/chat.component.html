@@ -11,17 +11,50 @@
                     <div class="flex">
                         <i class="bi bi-person-circle" id="profile-icon"></i>
                     </div>
-                    <form #uploadPictureForm = 'ngForm' (submit) = 'uploadImage(uploadPictureForm.value)' ngNativeValidate>
+                    <form #uploadPictureForm = 'ngForm' (submit) = 'uploadImage()' ngNativeValidate>
                         <div class="d-flex">
-                            <input type="file" name="picture" class="form-control" ngModel required>
+                            <input type="file" name="picture" class="form-control" (change) = 'handleImageSelection($event)' ngModel required>
                             <button type="submit">Upload</button>
                         </div>
                     </form>
+                    <div class="uploading" *ngIf="showUploading">
+                        <div class="dot1 bg-success rounded-circle m-2">
+                        </div>
+                        <div class="dot2 bg-success rounded-circle m-2">
+                        </div>
+                        <div class="dot3 bg-success rounded-circle m-2"></div>
+                    </div>
                     <hr>
                 </div>
+                
 
                 <div class="preferences text-white" *ngIf="!displaySession">
                     <h2 class="text-center">Preferences</h2>
+                    <div class="options">
+                    <p class="ms-3">
+                        Get a new message notification
+                         <span>
+                            <input type="checkbox">
+                         </span>
+                    </p>
+                   
+                   <p class="ms-3">
+                    Allow..
+                        <span class="d-block ps-4">
+                            Only the person i am chatting with
+                            <input type="checkbox">
+                        </span>
+                        <span class="d-block ps-4">
+                            Anyone
+                            <input type="checkbox">
+                        </span>
+                        <span class="d-block ps-4">
+                            No one
+                            <input type="checkbox">
+                        </span>
+                    to see my profile picture
+                   </p>
+                    </div>
                 </div>
                 
                 <!-- Eğer session init edilmemişse, ortadaki boş alana kullanıcı profil işlemleri ekle -->
