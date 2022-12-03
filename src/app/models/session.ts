@@ -18,6 +18,10 @@ export class SessionModel {
         blockedUsers : [],
         active: false,
         key: ' ',
+        // profilePicture : {
+        //   file : new FileList,
+        //   url : '' 
+        // }
       },
       time : ' ',
     },

@@ -224,6 +224,55 @@
     background-color: #1F2C33;
   }
 
+  .flex {
+    display: flex;
+    justify-content: center;
+  }
+
+  #profile-icon , #upload-icon{
+   font-size: 5rem;
+  }
+
+  #upload-button {
+    background-color: transparent;
+    border: .5px solid grey;
+    color: white;
+    width: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    transition: all .5s;
+    border-radius: 10px;
+  }
+
+  #upload-button:hover {
+    cursor: pointer;
+    background-color: grey;
+  }
+
+  form {
+    width: min-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  form input {
+    width: min-content;
+  }
+
+  .d-flex button {
+    border: .4px solid grey;
+    border-radius: 20px;
+    padding: .5rem;
+    background-color: transparent;
+    color: white;
+    margin-left: .5em;
+    transition: all .4s;
+  }
+
+  .d-flex button:hover {
+    background-color: grey;
+  }
+
 @media screen and (max-height : 900px) {
     li:last-child {
         padding-bottom: 4rem;

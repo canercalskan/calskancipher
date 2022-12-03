@@ -156,4 +156,7 @@ export class ChatComponent {
             }
         }
     }
+    uploadImage(file : File) : void {
+        this.userService.pushFileToStorage(this.currentUser , file)
+    }
 }

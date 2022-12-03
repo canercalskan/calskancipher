@@ -6,6 +6,24 @@
                 <active-users></active-users>
             </div>
             <div id="chat-session">
+
+                <div class="profile text-white" *ngIf="!displaySession">
+                    <div class="flex">
+                        <i class="bi bi-person-circle" id="profile-icon"></i>
+                    </div>
+                    <form #uploadPictureForm = 'ngForm' (submit) = 'uploadImage(uploadPictureForm.value)' ngNativeValidate>
+                        <div class="d-flex">
+                            <input type="file" name="picture" class="form-control" ngModel required>
+                            <button type="submit">Upload</button>
+                        </div>
+                    </form>
+                    <hr>
+                </div>
+
+                <div class="preferences text-white" *ngIf="!displaySession">
+                    <h2 class="text-center">Preferences</h2>
+                </div>
+                
                 <!-- Eğer session init edilmemişse, ortadaki boş alana kullanıcı profil işlemleri ekle -->
                 <!-- Anonim profil image gözüksün, altında update PP olsun -->
                 <!-- Status belirleme olsun wpdeki gibi -->
