@@ -16,10 +16,12 @@ import { MessageModel } from "src/app/models/message";
 export class ChatComponent {
     displaySession! : SessionModel;
     endUserName! : string;
+    endUserImage! : string;
     currentUser! : UserModel;
     currentUserUid! : string
     selectedFile! : FileList;
     showUploading! : boolean;
+    noImage! : boolean;
     constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private userService : UserService) {
         this.fireAuth.user.subscribe(u => {
             this.currentUserUid = u?.uid!
@@ -46,9 +48,11 @@ export class ChatComponent {
         this.displaySession = session;
         if(this.displaySession.endUser.username === this.currentUser.username) {
             this.endUserName = this.displaySession.firstUser.username;
+            this.endUserImage = this.displaySession.firstUser.profilePicture;
         }
         else {
             this.endUserName = this.displaySession.endUser.username;
+            this.endUserImage = this.displaySession.endUser.profilePicture;
         }
     }
 
@@ -176,10 +180,14 @@ export class ChatComponent {
         const file : FileList | null = this.selectedFile;
         this.showUploading = true;
         if(this.selectedFile) {
-            this.userService.pushFileToStorage(this.currentUser,file);
+            this.userService.pushFileToStorage(this.currentUser , file , this.displaySession);
         }
         else {
             Swal.fire('Hata' , 'Bilinmeyen bir hata oluştu.' , 'error');
         }
+    }
+
+    deleteProfilePicture() : void {
+        this.userService.deleteProfilePicture(this.currentUser)
     }
 }

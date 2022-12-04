@@ -9,7 +9,13 @@
 
                 <div class="profile text-white" *ngIf="!displaySession">
                     <div class="flex">
-                        <i class="bi bi-person-circle" id="profile-icon"></i>
+                        <i class="bi bi-person-circle" id="profile-icon" *ngIf="currentUser.profilePicture === ' ' "></i>
+
+                        <span *ngIf="currentUser.profilePicture !== ' '" id="image-field">
+                            <img src={{currentUser.profilePicture}} alt="user_pp">
+                            <i class="bi bi-trash3 text-danger fs-6" style="position: relative; bottom: 20px; right: 7px" (click) = 'deleteProfilePicture()'></i>
+                        </span>
+                        
                     </div>
                     <form #uploadPictureForm = 'ngForm' (submit) = 'uploadImage()' ngNativeValidate>
                         <div class="d-flex">
@@ -18,11 +24,16 @@
                         </div>
                     </form>
                     <div class="uploading" *ngIf="showUploading">
-                        <div class="dot1 bg-success rounded-circle m-2">
+                        <span class="text-success">uploading..</span>
+                        <div class="dots">
+                            <div class="dot1 bg-success rounded-circle m-2">
+                            </div>
+                            <div class="dot2 bg-success rounded-circle m-2">
+                            </div>
+                            <div class="dot3 bg-success rounded-circle m-2">
+                            </div>
                         </div>
-                        <div class="dot2 bg-success rounded-circle m-2">
-                        </div>
-                        <div class="dot3 bg-success rounded-circle m-2"></div>
+                        
                     </div>
                     <hr>
                 </div>
@@ -56,13 +67,13 @@
                    </p>
                     </div>
                 </div>
-                
-                <!-- Eğer session init edilmemişse, ortadaki boş alana kullanıcı profil işlemleri ekle -->
-                <!-- Anonim profil image gözüksün, altında update PP olsun -->
-                <!-- Status belirleme olsun wpdeki gibi -->
 
                 <div class="session-navbar text-white" *ngIf="displaySession">
-                    <span><i class="bi bi-person fs-4 p-2" style="border:1px solid #EC6600; border-radius: 15rem; color: #EC6600;"></i></span>
+                    <span>
+                        <i class="bi bi-person fs-4 p-2" *ngIf="endUserImage === ' '" style="border:1px solid #EC6600; border-radius: 15rem; color: #EC6600;"></i>
+                        <img id="endUserPP" *ngIf="endUserImage !== ' ' " src={{endUserImage}} alt="img">
+                    </span>
+                    
                     <span class=" ms-3" *ngIf="displaySession">{{endUserName}}</span>
                     <i class="dd bi bi-three-dots float-end text-white fs-5" id="session-actions">
                         <input type="checkbox">
