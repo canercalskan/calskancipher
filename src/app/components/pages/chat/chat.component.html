@@ -53,15 +53,15 @@
                     Allow..
                         <span class="d-block ps-4">
                             Only the person i am chatting with
-                            <input type="checkbox">
+                            <input type="checkbox" (change) = 'handlePermissionChange("enduser",$event)'>
                         </span>
                         <span class="d-block ps-4">
                             Anyone
-                            <input type="checkbox">
+                            <input type="checkbox" (change) = 'handlePermissionChange("anyone",$event)'>
                         </span>
                         <span class="d-block ps-4">
                             No one
-                            <input type="checkbox">
+                            <input type="checkbox" (change) = 'handlePermissionChange("noone",$event)'>
                         </span>
                     to see my profile picture
                    </p>
@@ -73,14 +73,15 @@
                         <i class="bi bi-person fs-4 p-2" *ngIf="endUserImage === ' '" style="border:1px solid #EC6600; border-radius: 15rem; color: #EC6600;"></i>
                         <img id="endUserPP" *ngIf="endUserImage !== ' ' " src={{endUserImage}} alt="img">
                     </span>
-                    
+
                     <span class=" ms-3" *ngIf="displaySession">{{endUserName}}</span>
                     <i class="dd bi bi-three-dots float-end text-white fs-5" id="session-actions">
                         <input type="checkbox">
                         <div class="dd-c">
                             <ul>
                                 <li (click) = 'deleteConversation(displaySession)'>Delete Conversation</li>
-                                <li (click) = 'blockUser(displaySession)'>Block User</li>
+                                <li (click) = 'blockUser(displaySession)' *ngIf="!blocked">Block User</li>
+                                <li (click) = 'unblockUser(displaySession)' *ngIf="blocked">Unblock User</li>
                             </ul>
                         </div>
                     </i>

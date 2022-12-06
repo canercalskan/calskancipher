@@ -22,6 +22,7 @@ export class ChatComponent {
     selectedFile! : FileList;
     showUploading! : boolean;
     noImage! : boolean;
+    blocked! : boolean;
     constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private userService : UserService) {
         this.fireAuth.user.subscribe(u => {
             this.currentUserUid = u?.uid!
@@ -34,6 +35,7 @@ export class ChatComponent {
                 }
             })
         })
+
     }
 
     showUploadingIcon() : void {
@@ -49,11 +51,24 @@ export class ChatComponent {
         if(this.displaySession.endUser.username === this.currentUser.username) {
             this.endUserName = this.displaySession.firstUser.username;
             this.endUserImage = this.displaySession.firstUser.profilePicture;
+           for(let i = 0; i < this.displaySession.endUser.blockedUsers.length; i++) {
+            if(this.displaySession.endUser.blockedUsers[i] === this.displaySession.firstUser.key) {
+                this.blocked = true;
+                break;
+            }
+           }
         }
         else {
             this.endUserName = this.displaySession.endUser.username;
             this.endUserImage = this.displaySession.endUser.profilePicture;
+            for(let i = 0 ; i < this.displaySession.firstUser.blockedUsers.length; i++) {
+                if(this.displaySession.firstUser.blockedUsers[i] === this.displaySession.endUser.key) {
+                    this.blocked = true;
+                    break;
+                }
+            }
         }
+
     }
 
     sendMessage(message : MessageModel) : void {
@@ -100,7 +115,7 @@ export class ChatComponent {
         //             location.reload();
         //         })
         //     })
-        Swal.fire('Success' , 'Conversation deletion is experimental.. May be really implemented in the future...' , 'success');
+        Swal.fire('Information' , 'Conversation deletion is experimental.. May be really implemented in the future...' , 'success');
     }
 
 
@@ -133,7 +148,7 @@ export class ChatComponent {
                         this.db.list<SessionModel>('sessions').update(session.sessionID , session).then(() => {
                             this.db.list<UserModel>('users').update(this.currentUser.key , this.currentUser).then(() => {
                                 Swal.fire('Success' , 'You have blocked ' + session.firstUser.username, 'success').then(() => {
-                                    location.reload();
+                                    this.blocked = true;
                                 })
                             })
                         })
@@ -161,13 +176,51 @@ export class ChatComponent {
                         this.db.list<SessionModel>('sessions').update(session.sessionID , session).then(() => {
                             this.db.list<UserModel>('users').update(this.currentUser.key , this.currentUser).then(() => {
                                 Swal.fire('Success' , 'You have blocked ' + session.endUser.username , 'success').then(() => {
-                                    location.reload();
+                                    this.blocked = true;
                                 })
                             })
                         })
                     }
                 })
             }
+        }
+    }
+
+    unblockUser(session : SessionModel) : void {
+        if(session.firstUser.uid === this.currentUser.uid) {
+           this.currentUser.blockedUsers = this.currentUser.blockedUsers.filter(user => user !== session.endUser.key);
+           session.firstUser = this.currentUser;
+           this.db.object<UserModel>('users/' + this.currentUser.key).update(this.currentUser).then(() => {
+                this.db.object<SessionModel>('sessions/' + session.sessionID).update(session).then(() => {
+                    Swal.fire({
+                        icon:'success',
+                        title : 'Success',
+                        text : session.endUser.username + ' unblocked',
+                        confirmButtonColor : 'green',
+                        confirmButtonText : 'Close'
+                    }).then(() => {
+                        this.blocked = false;
+                    })
+                })
+           })
+        }
+        else if(session.endUser.uid === this.currentUser.uid) {
+          this.currentUser.blockedUsers = this.currentUser.blockedUsers.filter(user => user !== session.firstUser.key);
+          session.endUser = this.currentUser;
+          this.db.object<UserModel>('users/' + this.currentUser.key).update(this.currentUser).then(() => {
+            this.db.object<SessionModel>('sessions/' + session.sessionID).update(session).then(() => {
+                Swal.fire({
+                    icon : 'success',
+                    title : 'Success' ,
+                    text : session.firstUser.username + ' unblocked',
+                    confirmButtonColor : 'green',
+                    confirmButtonText : 'Close'
+                }).then(() => {
+                    this.blocked = false
+                })
+                ;
+            })
+          })
         }
     }
 
@@ -189,5 +242,32 @@ export class ChatComponent {
 
     deleteProfilePicture() : void {
         this.userService.deleteProfilePicture(this.currentUser)
+    }
+
+    handlePermissionChange(subject : string , event : any) : void {
+        if(subject = 'anyone') {
+            if(event.target.checked) {
+
+            }
+            else if(!event.target.checked) {
+
+            }
+        }
+        if(subject = 'noone') {
+            if(event.target.checked) {
+
+            }
+            else if(!event.target.checked) {
+
+            }
+        }
+        if(subject = 'enduser') {
+            if(event.target.checked) {
+
+            }
+            else if(!event.target.checked) {
+
+            }
+        }
     }
 }
