@@ -16,7 +16,23 @@ export class UserService {
     user! : UserModel;
     templateSession! : SessionModel;
     selectedFile! : FileList
-    constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private storage : AngularFireStorage) {}
+    currentUser! : UserModel;
+    currentUserSessions! : SessionModel[];
+    constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private storage : AngularFireStorage) {
+        // this.fireAuth.user.subscribe(r => {
+        //     this.db.list<UserModel>('users').valueChanges().subscribe(u => {
+        //         for(let i = 0; i < u.length; i++) {
+        //             if(u[i].uid === r?.uid) {
+        //                 this.currentUser = u[i];
+        //                 break;
+        //             }
+        //         }
+        //     })
+        // })
+        // for(let i = 0; i < this.currentUser.sessions.length; i++) {
+            
+        // }
+    }
     private basePath = '/uploads/';
     urls: string[] = []
     productUrls: string[] = [];
@@ -35,18 +51,19 @@ export class UserService {
     
     private saveFileData(currentUser : UserModel , downloadURL : string): void {
         currentUser.profilePicture = downloadURL;
-        this.db.list(this.basePath).push(currentUser.profilePicture).then(() => {
             this.db.object('users/' + currentUser.key).update(currentUser).then(() => {
-                currentUser.sessions.forEach(session => {
-                    this.db.object<SessionModel>('sessions/' + session).valueChanges().subscribe(r => {
-                        if(r?.firstUser.uid === currentUser.uid) {
-                            r.firstUser = currentUser;
+              for(let i = 0; i < currentUser.sessions.length; i++) {
+                this.db.list<SessionModel>('sessions').valueChanges().subscribe(r => {
+                    r.forEach(session => {
+                        if(session.firstUser.uid === currentUser.uid) {
+                            this.db.object<SessionModel>('sessions/' + session.sessionID).update({firstUser : currentUser});
                         }
-                        else if(r?.endUser.uid === currentUser.uid) {
-                            r.endUser = currentUser;
+                        else if(session.endUser.uid === currentUser.uid) {
+                            this.db.object<SessionModel>('sessions/' + session.sessionID).update({endUser : currentUser});
                         }
-                        this.db.object('sessions/' + session).update(r!);
                     })
+                })
+              }
                 })
                     Swal.fire({
                         title : 'Success',
@@ -58,29 +75,26 @@ export class UserService {
                     }).then(() => {
                         location.reload()
                     })
-                })
-            })
+
     }
 
     deleteProfilePicture(currentUser : UserModel) : void {
-        //Ask twice.
         this.storage.refFromURL(currentUser.profilePicture).delete().subscribe(() => {
             currentUser.profilePicture = ' ';
             this.db.object('users/' + currentUser.key).update(currentUser).then(() => {
-                currentUser.sessions.forEach(session => {
-                    this.db.object<SessionModel>('sessions/' + session).valueChanges().subscribe(r => {
-                        if(r?.firstUser.uid === currentUser.uid) {
-                            r.firstUser = currentUser;
-                        }
-                        else if(r?.endUser.uid === currentUser.uid) {
-                            r.endUser = currentUser;
-                        }
-                        this.db.object('sessions/' + session).update(r!);
-                    })
-                })
-                Swal.fire('Done.' , 'Your profile image has removed' , 'info').then(() => {
-                    // location.reload();
-                })
+                    for(let i = 0; i < currentUser.sessions.length; i++) {
+                        this.db.list<SessionModel>('sessions').valueChanges().subscribe(r => {
+                            r.forEach(session => {
+                                if(session.firstUser.uid === currentUser.uid) {
+                                    this.db.object<SessionModel>('sessions/' + session.sessionID).update({firstUser : currentUser});
+                                }
+                                else if(session.endUser.uid === currentUser.uid) {
+                                    this.db.object<SessionModel>('sessions/' + session.sessionID).update({endUser : currentUser});
+                                }
+                            })
+                        })
+                      }
+                Swal.fire('Done.' , 'Your profile image has removed' , 'info');
             })
         })
     }
