@@ -6,7 +6,11 @@
     <hr>
     <div *ngFor="let user of activeUserList">
         <li>
-            <p *ngIf="user.active === true">{{user.username}}
+            <p *ngIf="user.active === true">
+                <span>
+                    <img src={{user.profilePicture}} alt="img" *ngIf="user.profilePicture !== ' '" id="pp">
+                </span>
+                {{user.username}}
                 <span class="float-end">
                     <i class="bi bi-circle-fill text-success fs-6"></i>  <i id="chat" class="bi bi-chat-dots d-inline text-info ms-1 me-2" (click) = 'activateSession(user)'></i>
                 </span>

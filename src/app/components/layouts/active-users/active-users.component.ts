@@ -4,6 +4,7 @@ import { AngularFireDatabase } from "@angular/fire/compat/database";
 import { UserModel } from "src/app/models/user";
 import { SessionModel } from "src/app/models/session";
 import { ChatComponent } from "../../pages/chat/chat.component";
+
 @Component({
     selector: 'active-users',
     templateUrl : './active-users.component.html',
@@ -15,6 +16,9 @@ export class ActiveUsers {
     currentUser! : UserModel;
     firstUserContains! : boolean;
     endUserContains! : boolean;
+    currentUserSessions : SessionModel[] = []
+    newMessageCount = 0;
+    notifications : UserModel[] = []
     constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private chatComponent : ChatComponent){
         this.fireAuth.user.subscribe(currentuser => {
             this.db.list<UserModel>('users').valueChanges().subscribe(users => {
@@ -34,6 +38,23 @@ export class ActiveUsers {
                 }
             }
         })
+
+        this.db.list<SessionModel>('sessions').valueChanges().subscribe((r) => {
+            for(let i = 0; i < r.length; i++) {
+                if(this.currentUser.sessions.includes(r[i].sessionID)) {
+                    this.currentUserSessions.push(r[i]);
+                }
+            }
+        })
+        for(let i = 0; i < this.currentUserSessions.length; i++ ){
+            for(let a = 0 ; a < this.currentUserSessions[i].conversation.length; a++) {
+                if(this.currentUserSessions[i].conversation[a].sender.uid !== this.currentUser.uid 
+                    && !this.currentUserSessions[i].conversation[a].read) {
+                        this.notifications.push(this.currentUserSessions[i].conversation[a].sender);
+                        ////////////// NOTIFICATIONS /////////////
+                }
+            }
+        }
     }
 
     // activateSession(endUser : UserModel) : void {
@@ -110,7 +131,6 @@ export class ActiveUsers {
         newSession.firstUser = this.currentUser;
         newSession.endUser = endUser;
         newSession.conversation = [];
-
         this.db.list<SessionModel>('sessions').valueChanges().subscribe(response => {
             if(response.length === 0) {
                 this.db.list<SessionModel>('sessions').push(newSession).then(response => {

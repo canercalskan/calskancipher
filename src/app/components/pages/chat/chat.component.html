@@ -71,9 +71,8 @@
                 <div class="session-navbar text-white" *ngIf="displaySession">
                     <span>
                         <i class="bi bi-person fs-4 p-2" *ngIf="endUserImage === ' '" style="border:1px solid #EC6600; border-radius: 15rem; color: #EC6600;"></i>
-                        <img id="endUserPP" *ngIf="endUserImage !== ' ' " src={{endUserImage}} alt="img">
+                        <img id="endUserPP" *ngIf="endUserImage !== ' '" src={{endUserImage}} alt="img">
                     </span>
-
                     <span class=" ms-3" *ngIf="displaySession">{{endUserName}}</span>
                     <i class="dd bi bi-three-dots float-end text-white fs-5" id="session-actions">
                         <input type="checkbox">
@@ -91,6 +90,20 @@
                     <li class="d-flex" *ngFor="let message of displaySession.conversation">
                         <span [ngClass]= "{'first-user' : message.sender.uid === currentUserUid , 'end-user' : message.sender.uid != currentUserUid}">
                             {{message.content}}
+                            <span *ngIf="message.sender.uid === currentUser.uid">
+                                <span class="message-sent" *ngIf="!message.read">
+                                    <i class="bi bi-check2"></i>
+                                </span>
+                                <span class="message-read" *ngIf="message.read">
+                                    <i class="bi bi-check2-all text-info"></i>
+                                </span>
+                            </span>
+                            <!-- <span class="message-sent" *ngIf="!message.read">
+                                <i class="bi bi-check2"></i>
+                            </span>
+                            <span class="message-read" *ngIf="message.read">
+                                <i class="bi bi-check2-all text-info"></i>
+                            </span> -->
                             <span class="message-time">{{message.time}}</span>
                         </span>
                     </li>

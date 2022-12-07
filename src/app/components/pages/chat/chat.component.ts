@@ -68,7 +68,12 @@ export class ChatComponent {
                 }
             }
         }
-
+            for(let i = 0 ; i < this.displaySession.conversation.length; i++) {
+                if(this.displaySession.conversation[i].sender.uid !== this.currentUser.uid) {
+                    this.displaySession.conversation[i].read = true;
+                }
+            }
+            this.db.object<SessionModel>('sessions/' + this.displaySession.sessionID).update(this.displaySession);
     }
 
     sendMessage(message : MessageModel) : void {
@@ -87,6 +92,7 @@ export class ChatComponent {
         }
 
         if(!blocked) {
+            message.read = false;
             this.userService.sendMessage(this.displaySession , message);
         }
         else {

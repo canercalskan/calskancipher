@@ -21,6 +21,7 @@ export class SessionModel {
         profilePicture : ' '
       },
       time : ' ',
+      read : false,
     },
   ];
 }

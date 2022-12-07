@@ -22,7 +22,6 @@
     position: relative;
     scroll-behavior: smooth;
     height: 80vh;
-    /* max-height: 80vh; */
     overflow:scroll;
     margin-top: 3rem;
     width: 100%;
@@ -31,9 +30,6 @@
     background-image: url(../../../../assets/Desktop.jpg);
 }
 
- /* li:last-child {
-    padding-bottom: 3rem;
-}    */
 
 #chat-session::-webkit-scrollbar {
     display: none;
@@ -54,10 +50,6 @@
 #messageForm{
     width: 69%;
     background-color: #202C33;
-    /* height: 20%;
-    margin-top: 60%; */
-    /* position:sticky;
-    */
     position: fixed;
     bottom: 0px; 
 }
@@ -136,8 +128,6 @@
 
 .dd input:after {
     content:"";
-    /* width:100%; */
-    /* height:2px; */
     position:absolute;
     display:block;
     background:#C63D0F;
@@ -211,7 +201,6 @@
     color: #ffff;
     background-color: #283b45;
     font-style: normal;
-    /* margin-bottom:5px; */
     word-break: keep-all;
     white-space:nowrap;
     display:block;
@@ -344,6 +333,13 @@
   width: 50px;
   height: 50px; 
   border-radius: 100px;
+}
+
+.message-sent , .message-read{
+  position: relative;
+  top: 11px;
+  left: 7px;
+  color: rgb(203, 203, 203)
 }
 
   @keyframes ScaleInOut {
