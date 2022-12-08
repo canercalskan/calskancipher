@@ -14,7 +14,7 @@ import { MessageModel } from "src/app/models/message";
 })
 
 export class ChatComponent {
-    displaySession! : SessionModel;
+    displaySession! : SessionModel | null;
     endUserName! : string;
     endUserImage! : string;
     currentUser! : UserModel;
@@ -85,21 +85,21 @@ export class ChatComponent {
     sendMessage(message : MessageModel) : void {
         let blocked = false;
         message.sender = this.currentUser;
-        for(let i = 0; i < this.displaySession.endUser.blockedUsers.length; i++) {
-            if(message.sender.key === this.displaySession.endUser.blockedUsers[i]) {
+        for(let i = 0; i < this.displaySession!.endUser.blockedUsers.length; i++) {
+            if(message.sender.key === this.displaySession!.endUser.blockedUsers[i]) {
                 blocked = true;
             }
         }
 
-        for(let i = 0 ; i < this.displaySession.firstUser.blockedUsers.length ; i++) {
-            if(message.sender.key === this.displaySession.firstUser.blockedUsers[i]) {
+        for(let i = 0 ; i < this.displaySession!.firstUser.blockedUsers.length ; i++) {
+            if(message.sender.key === this.displaySession!.firstUser.blockedUsers[i]) {
                 blocked = true;
             }
         }
 
         if(!blocked) {
             message.read = false;
-            this.userService.sendMessage(this.displaySession , message);
+            this.userService.sendMessage(this.displaySession! , message);
         }
         else {
             Swal.fire({
@@ -236,6 +236,16 @@ export class ChatComponent {
         }
     }
 
+    closeSession() : void {
+       Swal.fire({
+        imageUrl : '../../../assets/loading_gif.gif',
+        showConfirmButton : false,
+        timer : 500,
+       }).then(() => {
+         this.displaySession = null;
+       })
+    }
+
     handleImageSelection(event : any) : void {
         this.selectedFile = event.target.files;
     }
@@ -244,7 +254,7 @@ export class ChatComponent {
         const file : FileList | null = this.selectedFile;
         this.showUploading = true;
         if(this.selectedFile) {
-            this.userService.pushFileToStorage(this.currentUser , file , this.displaySession);
+            this.userService.pushFileToStorage(this.currentUser , file , this.displaySession!);
         }
         else {
             Swal.fire('Hata' , 'Bilinmeyen bir hata oluştu.' , 'error');

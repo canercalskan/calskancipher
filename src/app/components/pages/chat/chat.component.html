@@ -82,6 +82,7 @@
                         <img id="endUserPP" *ngIf="endUserImage !== ' '" src={{endUserImage}} alt="img">
                     </span>
                     <span class=" ms-3" *ngIf="displaySession">{{endUserName}}</span>
+                    <i class="bi bi-x-lg float-end ms-2 pt-1 text-danger" id="closeSession" (click) = 'closeSession()'></i>
                     <i class="dd bi bi-three-dots float-end text-white fs-5" id="session-actions">
                         <input type="checkbox">
                         <div class="dd-c">
