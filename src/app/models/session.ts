@@ -18,7 +18,8 @@ export class SessionModel {
         blockedUsers : [],
         active: false,
         key: ' ',
-        profilePicture : ' '
+        profilePicture : ' ',
+        showNotification : false,
       },
       time : ' ',
       read : false,

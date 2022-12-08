@@ -50,3 +50,14 @@ hr {
     border-radius: 100px;
 }
 
+#newMessageNotification {
+    animation-name: glow;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes glow {
+    0% {color: rgb(0, 149, 255);}
+    50% {color: rgb(43, 43, 246);}
+    100% {color: rgb(0, 149, 255)}
+}

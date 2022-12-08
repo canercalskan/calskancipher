@@ -35,7 +35,6 @@ export class ChatComponent {
                 }
             })
         })
-
     }
 
     showUploadingIcon() : void {
@@ -68,11 +67,18 @@ export class ChatComponent {
                 }
             }
         }
+
+        if(!this.displaySession.conversation) {
+            this.displaySession.conversation = []
+        }
+
+        if(this.displaySession.conversation.length != 0) {
             for(let i = 0 ; i < this.displaySession.conversation.length; i++) {
                 if(this.displaySession.conversation[i].sender.uid !== this.currentUser.uid) {
                     this.displaySession.conversation[i].read = true;
                 }
             }
+        }
             this.db.object<SessionModel>('sessions/' + this.displaySession.sessionID).update(this.displaySession);
     }
 
@@ -232,7 +238,6 @@ export class ChatComponent {
 
     handleImageSelection(event : any) : void {
         this.selectedFile = event.target.files;
-        console.log(this.selectedFile);
     }
 
     uploadImage() : void {

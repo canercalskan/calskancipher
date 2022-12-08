@@ -94,6 +94,7 @@ export class LoginComponent {
             newUser.email = user.email;
             newUser.username = user.username;
             newUser.profilePicture = ' ';
+            newUser.showNotification = false;
             this.fireAuth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
             this.fireAuth.createUserWithEmailAndPassword(user.email , user.password).then((r) => {
                     newUser.uid = r.user!.uid!;

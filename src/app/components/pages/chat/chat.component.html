@@ -9,12 +9,20 @@
 
                 <div class="profile text-white" *ngIf="!displaySession">
                     <div class="flex">
-                        <i class="bi bi-person-circle" id="profile-icon" *ngIf="currentUser.profilePicture === ' ' "></i>
-
-                        <span *ngIf="currentUser.profilePicture !== ' '" id="image-field">
+                        <span *ngIf="currentUser">
+                            <i class="bi bi-person-circle" id="profile-icon" *ngIf="currentUser.profilePicture === ' ' "></i>
+                        </span>
+                        <!-- <i class="bi bi-person-circle" id="profile-icon" *ngIf="currentUser.profilePicture === ' ' "></i> -->
+                        <span *ngIf="currentUser">
+                            <span *ngIf="currentUser.profilePicture !== ' '" id="image-field">
+                                <img src={{currentUser.profilePicture}} alt="user_pp">
+                                <i class="bi bi-trash3 text-danger fs-6" style="position: relative; bottom: 20px; right: 7px" (click) = 'deleteProfilePicture()'></i>
+                            </span>
+                        </span>
+                        <!-- <span *ngIf="currentUser.profilePicture !== ' '" id="image-field">
                             <img src={{currentUser.profilePicture}} alt="user_pp">
                             <i class="bi bi-trash3 text-danger fs-6" style="position: relative; bottom: 20px; right: 7px" (click) = 'deleteProfilePicture()'></i>
-                        </span>
+                        </span> -->
                         
                     </div>
                     <form #uploadPictureForm = 'ngForm' (submit) = 'uploadImage()' ngNativeValidate>

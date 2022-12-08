@@ -12,4 +12,5 @@ export class UserModel {
     sessions : string[] = [''];
     blockedUsers : string[] = [' '];  
     profilePicture! : string;
+    showNotification! : boolean;
 }

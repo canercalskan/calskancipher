@@ -1,4 +1,4 @@
 <div class="nav-bar">
     <p class="navbar-brand ps-4 mt-4 pt-2 float-start" href="#" style="letter-spacing: 4px;">IKU<span style="color: #EC6601;">CHAT</span></p>
-    <p class="mt-3 fs-5">{{user.username}} <i class="bi bi-box-arrow-left fs-2" (click) = 'handleLogOff()'></i> </p>   
+    <p *ngIf="user" class="mt-3 fs-5">{{user.username}} <i class="bi bi-box-arrow-left fs-2" (click) = 'handleLogOff()'></i> </p>   
 </div>

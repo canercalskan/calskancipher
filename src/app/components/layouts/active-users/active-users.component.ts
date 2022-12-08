@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { AngularFireAuth } from "@angular/fire/compat/auth";
 import { AngularFireDatabase } from "@angular/fire/compat/database";
 import { UserModel } from "src/app/models/user";
@@ -11,14 +11,12 @@ import { ChatComponent } from "../../pages/chat/chat.component";
     styleUrls : ['./active-users.component.css']
 })
 
-export class ActiveUsers {
+export class ActiveUsers implements OnInit{
     activeUserList : UserModel[] = [];
     currentUser! : UserModel;
     firstUserContains! : boolean;
     endUserContains! : boolean;
-    currentUserSessions : SessionModel[] = []
     newMessageCount = 0;
-    notifications : UserModel[] = []
     constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private chatComponent : ChatComponent){
         this.fireAuth.user.subscribe(currentuser => {
             this.db.list<UserModel>('users').valueChanges().subscribe(users => {
@@ -32,29 +30,90 @@ export class ActiveUsers {
         })
         this.db.list<UserModel>('users').valueChanges().subscribe(users => {
             this.activeUserList = [];
-            for(let i = 0; i < users.length; i++) {
-                if(users[i].active === true && users[i].uid !== this.currentUser.uid) { //
-                    this.activeUserList.push(users[i])
+            for (let i = 0; i < users.length; i++) {
+                if (users[i].active === true && users[i].uid !== this.currentUser.uid) { //
+                    this.activeUserList.push(users[i]);
                 }
             }
         })
 
-        this.db.list<SessionModel>('sessions').valueChanges().subscribe((r) => {
-            for(let i = 0; i < r.length; i++) {
-                if(this.currentUser.sessions.includes(r[i].sessionID)) {
-                    this.currentUserSessions.push(r[i]);
+        // this.db.list<SessionModel>('sessions').valueChanges().subscribe(sessionlist => {
+        //     for(let i = 0; i < sessionlist.length; i++) {
+        //         for(let j = 0; j < sessionlist[i].conversation.length; j++) {
+        //             if(sessionlist[i].conversation[j].sender.uid !== this.currentUser.uid && !sessionlist[i].conversation[j].read) {
+        //                 this.activeUserList.forEach(user => {
+        //                     if(user.uid === sessionlist[i].conversation[j].sender.uid) {
+        //                         user.showNotification = true;
+        //                     }
+        //                 })
+        //             }
+        //         }
+        //     }
+        // })
+
+
+        // this.db.list<SessionModel>('sessions').valueChanges().subscribe((r) => {
+        //     for(let i = 0; i < r.length; i++) {
+        //         if(this.currentUser.sessions.includes(r[i].sessionID)) {
+        //            this.currentUserSessions.push(r[i]);
+        //         }
+        //     }
+        // })
+
+        // let index = 0;
+        // while(!this.currentUserSessions[index]) {
+        //     console.log(this.currentUserSessions[index])
+        //     index++;
+        // }
+
+        // for(let i = 0; i < this.currentUserSessions.length; i++ ){
+        //     for(let a = 0 ; a < this.currentUserSessions[i].conversation.length; a++) {
+        //         if(this.currentUserSessions[i].conversation[a].sender.uid !== this.currentUser.uid 
+        //             && !this.currentUserSessions[i].conversation[a].read) {
+        //                 this.notifications.push(this.currentUserSessions[i].conversation[a].sender);
+        //         }
+        //     }
+        // }
+    }
+
+    ngOnInit(): void {
+        this.db.list<SessionModel>('sessions').valueChanges().subscribe(sessionlist => {
+            for(let i = 0; i < sessionlist.length; i++) {
+                if(sessionlist[i].conversation) {
+                    for(let j = 0; j < sessionlist[i].conversation.length; j++) {
+                        if(sessionlist[i].conversation[j].sender.uid !== this.currentUser.uid && !sessionlist[i].conversation[j].read) {
+                            this.activeUserList.forEach(user => {
+                                if(user.uid === sessionlist[i].conversation[j].sender.uid) {
+                                    user.showNotification = true;
+                                    this.playNewMessageNotificationSound()
+                                }
+                            })
+                        }
+                        
+                    }
                 }
+                // for(let j = 0; j < sessionlist[i].conversation.length; j++) {
+                //     if(sessionlist[i].conversation[j].sender.uid !== this.currentUser.uid && !sessionlist[i].conversation[j].read) {
+                //         this.activeUserList.forEach(user => {
+                //             if(user.uid === sessionlist[i].conversation[j].sender.uid) {
+                //                 user.showNotification = true;
+                //                 this.playNewMessageNotificationSound()
+                //             }
+                //         })
+                //     }
+                    
+                // }
             }
         })
-        for(let i = 0; i < this.currentUserSessions.length; i++ ){
-            for(let a = 0 ; a < this.currentUserSessions[i].conversation.length; a++) {
-                if(this.currentUserSessions[i].conversation[a].sender.uid !== this.currentUser.uid 
-                    && !this.currentUserSessions[i].conversation[a].read) {
-                        this.notifications.push(this.currentUserSessions[i].conversation[a].sender);
-                        ////////////// NOTIFICATIONS /////////////
-                }
-            }
-        }
+    }
+
+    playNewMessageNotificationSound() : void {
+        let audio = new Audio();
+        audio.autoplay = true
+        // audio.src = "../../../assets/dummySound.mp3";
+        audio.load();
+        audio.src = "../../../assets/notification.mp3"
+        audio.play();
     }
 
     // activateSession(endUser : UserModel) : void {
