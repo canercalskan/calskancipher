@@ -23,6 +23,7 @@ export class ChatComponent {
     showUploading! : boolean;
     noImage! : boolean;
     blocked! : boolean;
+    sessionActivated : boolean = false;
     constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private userService : UserService) {
         this.fireAuth.user.subscribe(u => {
             this.currentUserUid = u?.uid!
@@ -46,40 +47,43 @@ export class ChatComponent {
     }
 
     getSessionData(session : SessionModel) : void {
-        this.displaySession = session;
-        if(this.displaySession.endUser.username === this.currentUser.username) {
-            this.endUserName = this.displaySession.firstUser.username;
-            this.endUserImage = this.displaySession.firstUser.profilePicture;
-           for(let i = 0; i < this.displaySession.endUser.blockedUsers.length; i++) {
-            if(this.displaySession.endUser.blockedUsers[i] === this.displaySession.firstUser.key) {
+
+        if(session.endUser.username === this.currentUser.username) {
+            this.endUserName = session.firstUser.username;
+            this.endUserImage = session.firstUser.profilePicture;
+           for(let i = 0; i < session.endUser.blockedUsers.length; i++) {
+            if(session.endUser.blockedUsers[i] === session.firstUser.key) {
                 this.blocked = true;
                 break;
             }
            }
         }
         else {
-            this.endUserName = this.displaySession.endUser.username;
-            this.endUserImage = this.displaySession.endUser.profilePicture;
-            for(let i = 0 ; i < this.displaySession.firstUser.blockedUsers.length; i++) {
-                if(this.displaySession.firstUser.blockedUsers[i] === this.displaySession.endUser.key) {
+            this.endUserName = session.endUser.username;
+            this.endUserImage = session.endUser.profilePicture;
+            for(let i = 0 ; i < session.firstUser.blockedUsers.length; i++) {
+                if(session.firstUser.blockedUsers[i] === session.endUser.key) {
                     this.blocked = true;
                     break;
                 }
             }
         }
 
-        if(!this.displaySession.conversation) {
-            this.displaySession.conversation = []
+        if(!session.conversation) {
+            session.conversation = []
         }
 
-        if(this.displaySession.conversation.length != 0) {
-            for(let i = 0 ; i < this.displaySession.conversation.length; i++) {
-                if(this.displaySession.conversation[i].sender.uid !== this.currentUser.uid) {
-                    this.displaySession.conversation[i].read = true;
+        if(session.conversation.length != 0) {
+            for(let i = 0 ; i < session.conversation.length; i++) {
+                if(session.conversation[i].sender.uid !== this.currentUser.uid) {
+                    session.conversation[i].read = true;
                 }
             }
         }
-            this.db.object<SessionModel>('sessions/' + this.displaySession.sessionID).update(this.displaySession);
+            this.db.object<SessionModel>('sessions/' + session.sessionID).update(session).then(() => {
+                this.displaySession = session;
+                this.sessionActivated = true;
+            })
     }
 
     sendMessage(message : MessageModel) : void {
@@ -118,6 +122,28 @@ export class ChatComponent {
     }
 
     deleteConversation(session : SessionModel) : void {
+        if(session.firstUser.uid === this.currentUser.uid) {
+            this.db.object<UserModel>('users/' + session.firstUser.key).valueChanges().subscribe(r => {
+                r!.sessions = r!.sessions.filter(keepSession => keepSession !== session.sessionID)!
+                this.db.object('users/' + r!.key!).update(r!).then(() => {
+                    Swal.fire('Success' , 'Conversation deleted.' , 'success').then(() => {
+                        location.reload();
+                    })
+                })
+            })
+        }
+
+        else if(session.endUser.uid === this.currentUser.uid) {
+            this.db.object<UserModel>('users/' + session.endUser.key).valueChanges().subscribe(r => {
+                r!.sessions = r!.sessions.filter(keepSession => keepSession !== session.sessionID)!
+                this.db.object('users/' + r!.key!).update(r!).then(() => {
+                    Swal.fire('Success' , 'Conversation deleted.' , 'success').then(() => {
+                        location.reload();
+                    })
+                })
+            })
+        }
+
         // session.firstUser.sessions = session.firstUser.sessions.filter(s => s !== session.sessionID)
         // session.endUser.sessions = session.endUser.sessions.filter(s => s !== session.sessionID)
         // this.db.list('users').update(session.firstUser.key , session.firstUser).then(() => {
@@ -127,7 +153,17 @@ export class ChatComponent {
         //             location.reload();
         //         })
         //     })
-        Swal.fire('Information' , 'Conversation deletion is experimental.. May be really implemented in the future...' , 'success');
+        // this.db.object('sessions/' + session.sessionID).remove().then(() => {location.reload()})
+        //     this.db.object<UserModel>('users/' + session.firstUser.key).valueChanges().subscribe(r => {
+        //         r!.sessions = r?.sessions.filter(availableSession => availableSession !==  session.sessionID)!
+        //         this.db.object<UserModel>('users/' + session.firstUser.key).update(r!)
+        //     })
+        //     this.db.object<UserModel>('users/' + session.endUser.key).valueChanges().subscribe(r => {
+        //         r!.sessions = r?.sessions.filter(availableSession => availableSession !==  session.sessionID)!
+        //         this.db.object<UserModel>('users/' + session.endUser.key).update(r!)
+        //     })
+        // }).then(() => {location.reload()})
+        // Swal.fire('Information' , 'Conversation deletion is experimental.. May be really implemented in the future...' , 'success');
     }
 
 
@@ -243,6 +279,7 @@ export class ChatComponent {
         timer : 500,
        }).then(() => {
          this.displaySession = null;
+         location.reload()
        })
     }
 

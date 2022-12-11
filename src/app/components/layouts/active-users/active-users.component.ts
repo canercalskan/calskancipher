@@ -17,6 +17,7 @@ export class ActiveUsers implements OnInit{
     currentUser! : UserModel;
     firstUserContains! : boolean;
     endUserContains! : boolean;
+    sessionInitialized : boolean = false
     newMessageCount = 0;
     constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private chatComponent : ChatComponent){
         this.fireAuth.user.subscribe(currentuser => {
@@ -87,6 +88,7 @@ export class ActiveUsers implements OnInit{
                         endUser.sessions.push(newSession.sessionID);
                         this.db.list('users').update(this.currentUser.key , this.currentUser).then(() => {
                             this.db.list('users').update(endUser.key , endUser);
+                            this.sessionInitialized = true;
                             this.chatComponent.getSessionData(newSession);
                         }) 
                     })
@@ -100,6 +102,7 @@ export class ActiveUsers implements OnInit{
                          || 
                          (response[i].firstUser.key === endUser.key && response[i].endUser.key === this.currentUser.key)) {
                             found = true;
+                            this.sessionInitialized = true
                             this.chatComponent.getSessionData(response[i]);
                             break;
                         }
@@ -112,8 +115,10 @@ export class ActiveUsers implements OnInit{
                                 endUser.sessions.push(newSession.sessionID);
                                 this.db.list('users').update(this.currentUser.key , this.currentUser).then(() => {
                                     this.db.list('users').update(endUser.key , endUser);
+                                    this.sessionInitialized = true;
                                     this.chatComponent.getSessionData(newSession);
-                                }) 
+                                    return;
+                                })
                             })
                         })
                     }
