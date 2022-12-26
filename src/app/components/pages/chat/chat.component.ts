@@ -6,7 +6,8 @@ import { UserModel } from "src/app/models/user";
 import { SessionModel } from "src/app/models/session";
 import { UserService } from "src/app/services/user";
 import { MessageModel } from "src/app/models/message";
-
+import { CipherService } from "src/app/services/cipher";
+import { TitleStrategy } from "@angular/router";
 @Component({
     selector : 'chat',
     templateUrl : './chat.component.html',
@@ -15,6 +16,7 @@ import { MessageModel } from "src/app/models/message";
 
 export class ChatComponent {
     displaySession! : SessionModel | null;
+    tempSession! : SessionModel
     endUserName! : string;
     endUserImage! : string;
     currentUser! : UserModel;
@@ -24,7 +26,7 @@ export class ChatComponent {
     noImage! : boolean;
     blocked! : boolean;
     sessionActivated : boolean = false;
-    constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private userService : UserService) {
+    constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private userService : UserService, private CipherService : CipherService) {
         this.fireAuth.user.subscribe(u => {
             this.currentUserUid = u?.uid!
             this.db.list<UserModel>('users').valueChanges().subscribe(r => {
@@ -47,7 +49,7 @@ export class ChatComponent {
     }
 
     getSessionData(session : SessionModel) : void {
-
+       
         if(session.endUser.username === this.currentUser.username) {
             this.endUserName = session.firstUser.username;
             this.endUserImage = session.firstUser.profilePicture;
@@ -79,11 +81,20 @@ export class ChatComponent {
                     session.conversation[i].read = true;
                 }
             }
+            this.db.object<SessionModel>('sessions/' + session.sessionID).update(session);
         }
-            this.db.object<SessionModel>('sessions/' + session.sessionID).update(session).then(() => {
-                this.displaySession = session;
-                this.sessionActivated = true;
-            })
+
+        this.tempSession = session
+        // this.displaySession = session 
+        this.decryptConversation(this.tempSession)
+    }
+
+    decryptConversation(tempSession : SessionModel) : void {
+        tempSession.conversation.forEach(message => {
+            message.content = this.CipherService.decrypt(message.content , tempSession.conversation_key)
+        })
+        this.displaySession = tempSession
+        this.sessionActivated = true;
     }
 
     sendMessage(message : MessageModel) : void {
@@ -103,7 +114,8 @@ export class ChatComponent {
 
         if(!blocked) {
             message.read = false;
-            this.userService.sendMessage(this.displaySession! , message);
+            message.content = this.CipherService.encrypt(message.content , this.displaySession!.conversation_key)
+            this.userService.sendMessage(this.tempSession! , message);
         }
         else {
             Swal.fire({
@@ -278,6 +290,7 @@ export class ChatComponent {
         showConfirmButton : false,
         timer : 500,
        }).then(() => {
+        sessionStorage.removeItem('decrypted_conv')
          this.displaySession = null;
          location.reload()
        })

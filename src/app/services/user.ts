@@ -121,9 +121,9 @@ export class UserService {
         this.templateSession = session;
     }
 
-    getSessionData() : SessionModel {
-        return this.templateSession;
-    }
+    // getSessionData() : SessionModel {
+    //     return this.templateSession;
+    // }
 
     sendMessage(session : SessionModel , message : MessageModel) : void {
         let date = new Date();

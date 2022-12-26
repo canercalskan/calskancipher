@@ -4,6 +4,7 @@ import { AngularFireDatabase } from "@angular/fire/compat/database";
 import { UserModel } from "src/app/models/user";
 import { SessionModel } from "src/app/models/session";
 import { ChatComponent } from "../../pages/chat/chat.component";
+import { CipherService } from "src/app/services/cipher";
 import Swal from "sweetalert2";
 
 @Component({
@@ -19,7 +20,7 @@ export class ActiveUsers implements OnInit{
     endUserContains! : boolean;
     sessionInitialized : boolean = false
     newMessageCount = 0;
-    constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private chatComponent : ChatComponent){
+    constructor(private db : AngularFireDatabase , private fireAuth : AngularFireAuth , private chatComponent : ChatComponent , private cipherService : CipherService){
         this.fireAuth.user.subscribe(currentuser => {
             this.db.list<UserModel>('users').valueChanges().subscribe(users => {
                 for(let i = 0; i < users.length ; i++) {
@@ -72,7 +73,7 @@ export class ActiveUsers implements OnInit{
         newSession.firstUser = this.currentUser;
         newSession.endUser = endUser;
         newSession.conversation = [];
-
+        newSession.conversation_key = this.cipherService.generateRandomKey();
         Swal.fire({
             imageUrl : '../../../assets/loading_gif.gif',
             showConfirmButton : false,

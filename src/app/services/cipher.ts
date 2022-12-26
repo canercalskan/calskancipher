@@ -1,5 +1,5 @@
-import { DeclareVarStmt } from "@angular/compiler";
 import { Injectable, NgModule } from "@angular/core";
+import { MessageModel } from "../models/message";
 
 @Injectable({providedIn : "root"})
 @NgModule()
@@ -14,44 +14,75 @@ export class CipherService {
         ['V' , 'W' , 'X' , 'Y' , 'Z'],
     ]
 
-    xorCipher(message : string) : void {
-
-    }
-
-    polybiusCipher(message : string) : string[] {
-        //input message'ı objeye veya modele çek, whitespaces arrayini attribute olarak tanımla, decipher ederken
-        //whitespace eklemenin bi yolunu bul. 
-        let i , j , k;
-        let encrypted : string[] = [];
-        let whiteSpaces : number[] = []
-        for(i = 0; i < message.length; i++) {
-            if(message[i] === ' ') {
-                whiteSpaces.push(i+1);
+    generateRandomKey() : string {
+        let generatedString = ''
+        while(generatedString.length <= 10) {
+            let i = Math.ceil(Math.random() * 10);
+            let j = Math.ceil(Math.random() * 10);
+            if(i > 4  || j > 4   ) {
+                continue;
             }
-            for(j = 0; j < 5 ; j++) {
-                for(k = 0; k < 5 ; k++) {
-                    if(message[i] .toUpperCase() === this.englishLetters[j][k]) {
-                        encrypted.push((j+1).toString() + (k+1).toString())
-                    }
-                }
+            else {
+                generatedString += this.englishLetters[i][j].toString();
             }
         }
+        return generatedString;
+    }
+
+    isLetter(currentChar : string) : boolean {
+        if(currentChar.length === 1 && currentChar.match(/[a-zA-Z]/)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    findMod(x : number , y : number) {
+        return((x % y) + y) % y;
+    }
+
+    encrypt(plaintext : string, key : string) : string {
+        let encrypted = '';
+        for(let i = 0 , j = 0; i < plaintext.length; i++) {
+            let currentChar = plaintext.charAt(i);
+            if(this.isLetter(currentChar)) {
+                if(currentChar === currentChar.toLowerCase()) { // checking if the current character is in the lowercase form.
+                    encrypted += String.fromCharCode(((currentChar.charCodeAt(0) - 97) + (key[j%key.length].toLowerCase().charCodeAt(0) - 97)) % 26+97);
+                    j++;
+                }
+                else if(currentChar === currentChar.toUpperCase()) { // checking if the current character is in the uppercase form.
+                    encrypted += String.fromCharCode(((currentChar.charCodeAt(0) - 65) + (key[j%key.length].toUpperCase().charCodeAt(0) - 65)) % 26 + 65);
+                    j++; 
+                }
+            }
+            else { // if the current letter is not a letter between a-z or A-Z, it will be pushed to the encrypted variable directly.
+                encrypted += currentChar;
+            }
+        }
+        // console.log(encrypted.toUpperCase())
         return encrypted;
     }
 
-    polybiusDeCipher(encrypted : string) : void {
-        let decrypted : string = '';
-        for(let i = 0; i<encrypted.length; i++) {
-            decrypted += this.englishLetters[(+encrypted[i])-1][(+encrypted[i+1])-1];
-            i++;
+    decrypt(ciphertext : string , key : string) : string {
+        let decrypted = ''
+        for (let i = 0, j = 0; i < ciphertext.length; i++) {
+            let currentChar = ciphertext.charAt(i)
+             if (this.isLetter(currentChar)) {
+                if (currentChar === currentChar.toLowerCase()) {
+                    decrypted += String.fromCharCode(this.findMod((currentChar.charCodeAt(0) - 97 ) - ((key[j % key.length].toLowerCase()).charCodeAt(0) - 97), 26) + 97)
+                    j++
+                } 
+                else if(currentChar === currentChar.toUpperCase()){
+                    decrypted += String.fromCharCode(this.findMod((currentChar.charCodeAt(0) - 65 ) - ((key[j % key.length].toUpperCase()).charCodeAt(0) - 65), 26) + 65)
+                    j++;
+                }
+            } 
+            else {
+                decrypted += currentChar
+            }
         }
-        console.log(decrypted);
+
+        return decrypted
     }
-
-    monoalphabeticCipher() : void {}
-
-    ceasarCipher() : void {}
-
-    bitshiftCipher() : void {}
-
 }

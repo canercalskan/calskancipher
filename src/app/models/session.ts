@@ -5,6 +5,7 @@ export class SessionModel {
   firstUser!: UserModel;
   endUser!: UserModel;
   sessionID!: string;
+  conversation_key!: string;
   conversation: MessageModel[] = [
     {
       content: ' ',
@@ -23,6 +24,7 @@ export class SessionModel {
       },
       time : ' ',
       read : false,
+      decrypted : false,
     },
   ];
 }
