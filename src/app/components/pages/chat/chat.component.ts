@@ -83,18 +83,10 @@ export class ChatComponent {
             }
             this.db.object<SessionModel>('sessions/' + session.sessionID).update(session);
         }
-
-        this.tempSession = session
-        // this.displaySession = session 
-        this.decryptConversation(this.tempSession)
-    }
-
-    decryptConversation(tempSession : SessionModel) : void {
-        tempSession.conversation.forEach(message => {
-            message.content = this.CipherService.decrypt(message.content , tempSession.conversation_key)
-        })
-        this.displaySession = tempSession
-        this.sessionActivated = true;
+            this.db.object<SessionModel>('sessions/' + session.sessionID).update(session).then(() => {
+                this.displaySession = session;
+                this.sessionActivated = true;
+            })
     }
 
     sendMessage(message : MessageModel) : void {
